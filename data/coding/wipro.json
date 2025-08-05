@@ -1,0 +1,89 @@
+{
+  "beginner": [
+    {
+      "title": "Print Star Pattern",
+      "description": "Write a program to print the following star pattern for n rows:\n*\n**\n***\n**** (for n=4)",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "3\n", "output": "*\n**\n***\n"},
+        {"input": "5\n", "output": "*\n**\n***\n****\n*****\n"}
+      ]
+    },
+    {
+      "title": "Sum of Two Numbers",
+      "description": "Write a program to input two integers and print their sum.",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "2 3\n", "output": "5\n"},
+        {"input": "10 20\n", "output": "30\n"}
+      ]
+    },
+    {
+      "title": "Even or Odd",
+      "description": "Write a program to check if a number is even or odd.",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "4\n", "output": "Even\n"},
+        {"input": "7\n", "output": "Odd\n"}
+      ]
+    }
+  ],
+  "intermediate": [
+    {
+      "title": "Check Palindrome",
+      "description": "Write a function to check if a given string is a palindrome.",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "level\n", "output": "Yes\n"},
+        {"input": "world\n", "output": "No\n"}
+      ]
+    },
+    {
+      "title": "Array Sum",
+      "description": "Find the sum of all elements in an array.",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "5\n1 2 3 4 5\n", "output": "15\n"},
+        {"input": "3\n10 20 30\n", "output": "60\n"}
+      ]
+    },
+    {
+      "title": "Reverse an Array",
+      "description": "Reverse the elements of an array.",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "5\n1 2 3 4 5\n", "output": "5 4 3 2 1\n"},
+        {"input": "3\n7 8 9\n", "output": "9 8 7\n"}
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "String Compression",
+      "description": "Given a string, write a function to compress it using the counts of repeated characters (e.g., aabcccccaaa → a2b1c5a3). If the compressed string is not smaller, return the original.",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "aabcccccaaa\n", "output": "a2b1c5a3\n"},
+        {"input": "abcdef\n", "output": "abcdef\n"}
+      ]
+    },
+    {
+      "title": "Find Second Largest Number",
+      "description": "Given an array, find the second largest number.",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "5\n1 3 4 2 5\n", "output": "4\n"},
+        {"input": "4\n10 20 5 7\n", "output": "10\n"}
+      ]
+    },
+    {
+      "title": "Matrix Diagonal Sum",
+      "description": "Given a square matrix, find the sum of its main diagonal elements.",
+      "languages": ["Python", "Java", "C++", "C"],
+      "test_cases": [
+        {"input": "3\n1 2 3\n4 5 6\n7 8 9\n", "output": "15\n"},
+        {"input": "2\n2 3\n4 5\n", "output": "7\n"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "beginner": [
+    {
+      "title": "Sum of Two Numbers",
+      "description": "Write a program to take two numbers as input and print their sum.",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "2 3\n", "output": "5\n"},
+        {"input": "10 20\n", "output": "30\n"}
+      ]
+    },
+    {
+      "title": "Check Even or Odd",
+      "description": "Write a program to check if a given number is even or odd.",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "7\n", "output": "Odd\n"},
+        {"input": "12\n", "output": "Even\n"}
+      ]
+    },
+    {
+      "title": "Simple Interest Calculator",
+      "description": "Given principal (P), rate (R), and time (T), calculate simple interest (P*R*T/100).",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "1000 5 2\n", "output": "100.0\n"},
+        {"input": "1200 3 1\n", "output": "36.0\n"}
+      ]
+    }
+  ],
+  "intermediate": [
+    {
+      "title": "Reverse a String",
+      "description": "Write a function to reverse a given string.",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "accenture\n", "output": "erutnecca\n"},
+        {"input": "hello\n", "output": "olleh\n"}
+      ]
+    },
+    {
+      "title": "Find Largest Number",
+      "description": "Write a function to find the largest of three numbers.",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "10 20 15\n", "output": "20\n"},
+        {"input": "7 3 9\n", "output": "9\n"}
+      ]
+    },
+    {
+      "title": "Sum of Digits",
+      "description": "Write a function to return the sum of digits of a number.",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "1234\n", "output": "10\n"},
+        {"input": "2024\n", "output": "8\n"}
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Fibonacci Number",
+      "description": "Write a function to print the Nth Fibonacci number.",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "7\n", "output": "13\n"},
+        {"input": "10\n", "output": "55\n"}
+      ]
+    },
+    {
+      "title": "Palindrome String",
+      "description": "Check if a given string is a palindrome.",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "madam\n", "output": "Yes\n"},
+        {"input": "hello\n", "output": "No\n"}
+      ]
+    },
+    {
+      "title": "Matrix Row Sum",
+      "description": "Given a matrix, print the sum of each row.",
+      "languages": ["Python", "JavaScript"],
+      "test_cases": [
+        {"input": "2 3\n1 2 3\n4 5 6\n", "output": "6 15\n"},
+        {"input": "3 2\n1 1\n1 1\n1 1\n", "output": "2 2 2\n"}
+      ]
+    }
+  ]
+}

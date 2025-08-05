@@ -1,0 +1,89 @@
+{
+  "beginner": [
+    {
+      "title": "Sum of Array Elements",
+      "description": "Write a program to calculate the sum of all elements in a given array.",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "4\n1 2 3 4\n", "output": "10\n"},
+        {"input": "3\n5 6 7\n", "output": "18\n"}
+      ]
+    },
+    {
+      "title": "Find Maximum in Array",
+      "description": "Write a program to find the maximum number in an array.",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "5\n1 2 3 4 5\n", "output": "5\n"},
+        {"input": "3\n7 2 9\n", "output": "9\n"}
+      ]
+    },
+    {
+      "title": "Reverse a String",
+      "description": "Write a function that reverses a given string.",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "hello\n", "output": "olleh\n"},
+        {"input": "amazon\n", "output": "nozama\n"}
+      ]
+    }
+  ],
+  "intermediate": [
+    {
+      "title": "Find Element Ratio",
+      "description": "Given an array, find the ratio of positive, negative, and zero elements (return as three decimal values with six places after the decimal).",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "5\n1 -2 0 4 -1\n", "output": "0.400000 0.400000 0.200000\n"},
+        {"input": "3\n0 0 -5\n", "output": "0.000000 0.333333 0.666667\n"}
+      ]
+    },
+    {
+      "title": "Find Missing Number",
+      "description": "Given an array of size n-1 containing distinct numbers from 1 to n, find the missing number.",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "4\n1 2 4 5\n", "output": "3\n"},
+        {"input": "6\n1 2 3 4 5 7\n", "output": "6\n"}
+      ]
+    },
+    {
+      "title": "Recursive Factorial",
+      "description": "Write a recursive function to compute the factorial of a number.",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "5\n", "output": "120\n"},
+        {"input": "7\n", "output": "5040\n"}
+      ]
+    }
+  ],
+  "advanced": [
+    {
+      "title": "Maximum Subarray Sum",
+      "description": "Given an array, find the contiguous subarray with the maximum sum (Kadane's algorithm).",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "9\n-2 1 -3 4 -1 2 1 -5 4\n", "output": "6\n"},
+        {"input": "5\n-1 -2 -3 -4 -5\n", "output": "-1\n"}
+      ]
+    },
+    {
+      "title": "Longest Substring Without Repeating Characters",
+      "description": "Find the length of the longest substring without repeating characters.",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "abcabcbb\n", "output": "3\n"},
+        {"input": "bbbbb\n", "output": "1\n"}
+      ]
+    },
+    {
+      "title": "Find All Anagrams",
+      "description": "Given a string and a pattern, find all starting indices of the pattern's anagrams in the string.",
+      "languages": ["Python", "Java", "C++"],
+      "test_cases": [
+        {"input": "cbaebabacd abc\n", "output": "0 6\n"},
+        {"input": "abab ab\n", "output": "0 1 2\n"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,308 @@
+{
+  "beginner": [
+    {
+      "question": "What is 8 + 7?",
+      "options": ["13", "15", "16", "17"],
+      "answer": "15",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the next even number after 14.",
+      "options": ["15", "16", "17", "18"],
+      "answer": "16",
+      "category": "quantitative"
+    },
+    {
+      "question": "Select the correct spelling.",
+      "options": ["Recieve", "Receive", "Recive", "Receeve"],
+      "answer": "Receive",
+      "category": "verbal"
+    },
+    {
+      "question": "Identify the verb: 'The cat sleeps.'",
+      "options": ["cat", "The", "sleeps", "None"],
+      "answer": "sleeps",
+      "category": "verbal"
+    },
+    {
+      "question": "Which shape has three sides?",
+      "options": ["Circle", "Square", "Triangle", "Rectangle"],
+      "answer": "Triangle",
+      "category": "logical"
+    },
+    {
+      "question": "What comes next: 4, 8, 12, __",
+      "options": ["14", "16", "18", "20"],
+      "answer": "16",
+      "category": "logical"
+    },
+    {
+      "question": "What is 50% of 30?",
+      "options": ["10", "15", "20", "25"],
+      "answer": "15",
+      "category": "quantitative"
+    },
+    {
+      "question": "Choose the correct plural: 'child'",
+      "options": ["childs", "childes", "children", "childrens"],
+      "answer": "children",
+      "category": "verbal"
+    },
+    {
+      "question": "If you have 2 pencils and buy 3 more, how many do you have?",
+      "options": ["3", "4", "5", "6"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which is the odd one out: Pen, Pencil, Eraser, Apple",
+      "options": ["Pen", "Pencil", "Eraser", "Apple"],
+      "answer": "Apple",
+      "category": "logical"
+    },
+    {
+      "question": "He __ to school every day. (go/going/goes/went)",
+      "options": ["go", "going", "goes", "went"],
+      "answer": "goes",
+      "category": "verbal"
+    },
+    {
+      "question": "If 12 - 5 = ?",
+      "options": ["5", "6", "7", "8"],
+      "answer": "7",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which direction is opposite of North?",
+      "options": ["South", "East", "West", "Up"],
+      "answer": "South",
+      "category": "logical"
+    },
+    {
+      "question": "Choose the correct sentence.",
+      "options": [
+        "She are happy.",
+        "She is happy.",
+        "She am happy.",
+        "She be happy."
+      ],
+      "answer": "She is happy.",
+      "category": "verbal"
+    },
+    {
+      "question": "What is 7 x 3?",
+      "options": ["21", "24", "27", "30"],
+      "answer": "21",
+      "category": "quantitative"
+    }
+  ],
+  "intermediate": [
+    {
+      "question": "If the average of 10, 20, and 30 is __?",
+      "options": ["15", "20", "25", "30"],
+      "answer": "20",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which is a synonym for 'Begin'?",
+      "options": ["Stop", "End", "Start", "Finish"],
+      "answer": "Start",
+      "category": "verbal"
+    },
+    {
+      "question": "If you travel east and turn right, which direction are you facing?",
+      "options": ["North", "South", "West", "East"],
+      "answer": "South",
+      "category": "logical"
+    },
+    {
+      "question": "What is the next number: 5, 10, 20, 40, __",
+      "options": ["60", "70", "80", "90"],
+      "answer": "80",
+      "category": "logical"
+    },
+    {
+      "question": "If 25% of a number is 30, what is the number?",
+      "options": ["60", "90", "100", "120"],
+      "answer": "120",
+      "category": "quantitative"
+    },
+    {
+      "question": "He has __ apples than me. (more/most/much/many)",
+      "options": ["more", "most", "much", "many"],
+      "answer": "more",
+      "category": "verbal"
+    },
+    {
+      "question": "Find the odd one out: Bus, Car, Bike, Book",
+      "options": ["Bus", "Car", "Bike", "Book"],
+      "answer": "Book",
+      "category": "logical"
+    },
+    {
+      "question": "If a train covers 120 km in 2 hours, what is its average speed?",
+      "options": ["50", "60", "70", "80"],
+      "answer": "60",
+      "category": "quantitative"
+    },
+    {
+      "question": "Choose the passive voice: They are playing football.",
+      "options": [
+        "Football is played by them.",
+        "Football was played by them.",
+        "Football is being played by them.",
+        "Football will be played by them."
+      ],
+      "answer": "Football is being played by them.",
+      "category": "verbal"
+    },
+    {
+      "question": "What comes next: 1, 4, 9, 16, __",
+      "options": ["25", "20", "36", "49"],
+      "answer": "25",
+      "category": "logical"
+    },
+    {
+      "question": "If 5 pens cost Rs. 50, what is the cost of 8 pens?",
+      "options": ["80", "60", "40", "100"],
+      "answer": "80",
+      "category": "quantitative"
+    },
+    {
+      "question": "The opposite of 'difficult' is __?",
+      "options": ["hard", "easy", "slow", "fast"],
+      "answer": "easy",
+      "category": "verbal"
+    },
+    {
+      "question": "If today is Monday, what day will it be after 10 days?",
+      "options": ["Wednesday", "Thursday", "Friday", "Saturday"],
+      "answer": "Thursday",
+      "category": "logical"
+    },
+    {
+      "question": "Choose the correct indirect speech: He said, 'I am tired.'",
+      "options": [
+        "He said he is tired.",
+        "He said he was tired.",
+        "He say he was tired.",
+        "He say he is tired."
+      ],
+      "answer": "He said he was tired.",
+      "category": "verbal"
+    },
+    {
+      "question": "A shopkeeper sells 3 pens for Rs. 30. What is the price of one pen?",
+      "options": ["5", "10", "15", "20"],
+      "answer": "10",
+      "category": "quantitative"
+    }
+  ],
+  "advanced": [
+    {
+      "question": "If 3x + 2 = 17, what is x?",
+      "options": ["3", "4", "5", "6"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which is the antonym of 'Expand'?",
+      "options": ["Enlarge", "Contract", "Grow", "Widen"],
+      "answer": "Contract",
+      "category": "verbal"
+    },
+    {
+      "question": "If the probability of rain is 0.7, what is the probability of no rain?",
+      "options": ["0.3", "0.4", "0.5", "0.7"],
+      "answer": "0.3",
+      "category": "quantitative"
+    },
+    {
+      "question": "Choose the grammatically correct sentence.",
+      "options": [
+        "Neither of the boys have done their homework.",
+        "Neither of the boys has done their homework.",
+        "Neither of the boys do their homework.",
+        "Neither of the boys did their homework."
+      ],
+      "answer": "Neither of the boys has done their homework.",
+      "category": "verbal"
+    },
+    {
+      "question": "What is 15% of 320?",
+      "options": ["45", "48", "50", "60"],
+      "answer": "48",
+      "category": "quantitative"
+    },
+    {
+      "question": "If the sum of three consecutive odd numbers is 51, what is the largest number?",
+      "options": ["15", "17", "19", "21"],
+      "answer": "19",
+      "category": "quantitative"
+    },
+    {
+      "question": "What comes next: 2, 6, 12, 20, __",
+      "options": ["24", "28", "30", "32"],
+      "answer": "30",
+      "category": "logical"
+    },
+    {
+      "question": "If all dogs are animals and some animals are cats, are all dogs cats?",
+      "options": ["Yes", "No", "Cannot determine", "Sometimes"],
+      "answer": "Cannot determine",
+      "category": "logical"
+    },
+    {
+      "question": "Choose the correct usage of 'affect'/'effect':",
+      "options": [
+        "The movie affected me deeply.",
+        "The movie effected me deeply.",
+        "The movie is affect me deeply.",
+        "The movie is effect me deeply."
+      ],
+      "answer": "The movie affected me deeply.",
+      "category": "verbal"
+    },
+    {
+      "question": "If the difference between two numbers is 12 and their sum is 52, what is the larger number?",
+      "options": ["20", "32", "36", "40"],
+      "answer": "32",
+      "category": "quantitative"
+    },
+    {
+      "question": "If the ratio of boys to girls is 5:3 in a class of 80, how many boys?",
+      "options": ["30", "40", "50", "60"],
+      "answer": "50",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the missing term: 3, 9, 27, __, 243",
+      "options": ["54", "72", "81", "90"],
+      "answer": "81",
+      "category": "logical"
+    },
+    {
+      "question": "If it takes 4 machines 4 minutes to make 4 items, how long will it take 100 machines to make 100 items?",
+      "options": ["1", "4", "25", "100"],
+      "answer": "4",
+      "category": "logical"
+    },
+    {
+      "question": "Choose the correct sentence on subject-verb agreement.",
+      "options": [
+        "The cost of the pens are high.",
+        "The cost of the pens is high.",
+        "The costs of the pen is high.",
+        "The cost of the pens were high."
+      ],
+      "answer": "The cost of the pens is high.",
+      "category": "verbal"
+    },
+    {
+      "question": "If 2x + 3y = 12 and x = 2, what is y?",
+      "options": ["2", "3", "4", "5"],
+      "answer": "2",
+      "category": "quantitative"
+    }
+  ]
+}

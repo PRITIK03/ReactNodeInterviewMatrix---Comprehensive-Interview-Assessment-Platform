@@ -1,0 +1,308 @@
+{
+  "beginner": [
+    {
+      "question": "A shopkeeper has 10 apples and sells 3. How many apples are left?",
+      "options": ["7", "8", "10", "13"],
+      "answer": "7",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which number is the largest: 2, 4, 9, 6?",
+      "options": ["2", "4", "6", "9"],
+      "answer": "9",
+      "category": "quantitative"
+    },
+    {
+      "question": "If you double 5, what do you get?",
+      "options": ["10", "15", "20", "5"],
+      "answer": "10",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the next number in the series: 2, 4, 8, 16, __",
+      "options": ["20", "24", "32", "36"],
+      "answer": "32",
+      "category": "logical"
+    },
+    {
+      "question": "If all cars are vehicles, and some vehicles are bikes, are all cars bikes?",
+      "options": ["Yes", "No", "Cannot determine", "Sometimes"],
+      "answer": "Cannot determine",
+      "category": "logical"
+    },
+    {
+      "question": "Which is a fruit: Apple, Car, Book, Dog?",
+      "options": ["Apple", "Car", "Book", "Dog"],
+      "answer": "Apple",
+      "category": "logical"
+    },
+    {
+      "question": "If 3x = 15, what is x?",
+      "options": ["3", "4", "5", "6"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "You have Rs. 100 and buy a pen for Rs. 30. How much money is left?",
+      "options": ["60", "70", "80", "90"],
+      "answer": "70",
+      "category": "quantitative"
+    },
+    {
+      "question": "Complete the pattern: 1, 3, 5, 7, __",
+      "options": ["8", "9", "10", "11"],
+      "answer": "9",
+      "category": "logical"
+    },
+    {
+      "question": "Which is the odd one out: Lion, Tiger, Elephant, Chair?",
+      "options": ["Lion", "Tiger", "Elephant", "Chair"],
+      "answer": "Chair",
+      "category": "logical"
+    },
+    {
+      "question": "You are given a choice between Rs. 20 now or Rs. 25 after a week. Which is more money?",
+      "options": ["Rs. 20", "Rs. 25", "Both equal", "Cannot say"],
+      "answer": "Rs. 25",
+      "category": "situational"
+    },
+    {
+      "question": "If you see someone drop their wallet, what should you do?",
+      "options": [
+        "Pick it up and keep it",
+        "Ignore it",
+        "Return it to them",
+        "Give it to someone else"
+      ],
+      "answer": "Return it to them",
+      "category": "situational"
+    },
+    {
+      "question": "If a puzzle has 10 pieces and you have placed 7, how many are left?",
+      "options": ["2", "3", "4", "5"],
+      "answer": "3",
+      "category": "logical"
+    },
+    {
+      "question": "If a bag costs Rs. 60 and you have Rs. 80, how much will be left after buying it?",
+      "options": ["10", "20", "30", "40"],
+      "answer": "20",
+      "category": "quantitative"
+    },
+    {
+      "question": "You get Rs. 5 as change from Rs. 50 after buying a book. What was the price of the book?",
+      "options": ["35", "40", "45", "50"],
+      "answer": "45",
+      "category": "quantitative"
+    }
+  ],
+  "intermediate": [
+    {
+      "question": "If the average of five numbers is 24, what is their total sum?",
+      "options": ["100", "110", "120", "130"],
+      "answer": "120",
+      "category": "quantitative"
+    },
+    {
+      "question": "A man walks 4 km North, then 3 km East. How far is he from the starting point?",
+      "options": ["5", "6", "7", "8"],
+      "answer": "5",
+      "category": "logical"
+    },
+    {
+      "question": "If 5 pens cost Rs. 50, what is the cost of 8 pens?",
+      "options": ["60", "70", "80", "90"],
+      "answer": "80",
+      "category": "quantitative"
+    },
+    {
+      "question": "Complete the analogy: Bird : Fly :: Fish : __",
+      "options": ["Swim", "Jump", "Walk", "Run"],
+      "answer": "Swim",
+      "category": "logical"
+    },
+    {
+      "question": "If 10% of a number is 15, what is the number?",
+      "options": ["100", "120", "150", "200"],
+      "answer": "150",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the next term: 3, 8, 15, 24, __",
+      "options": ["33", "35", "39", "41"],
+      "answer": "35",
+      "category": "logical"
+    },
+    {
+      "question": "If a train covers 120 km in 2 hours, what is its average speed?",
+      "options": ["50 km/h", "60 km/h", "70 km/h", "80 km/h"],
+      "answer": "60 km/h",
+      "category": "quantitative"
+    },
+    {
+      "question": "You have 3 red balls and 2 blue balls. What is the total number of balls?",
+      "options": ["4", "5", "6", "7"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "Your team misses a project deadline. What would you most likely do?",
+      "options": [
+        "Blame the team",
+        "Analyze the causes and suggest improvements",
+        "Ignore the issue",
+        "Leave the team"
+      ],
+      "answer": "Analyze the causes and suggest improvements",
+      "category": "situational"
+    },
+    {
+      "question": "If the sum of three consecutive even numbers is 54, what is the largest number?",
+      "options": ["16", "18", "20", "22"],
+      "answer": "20",
+      "category": "quantitative"
+    },
+    {
+      "question": "A puzzle has 54 pieces. If you have placed 38, how many are left?",
+      "options": ["14", "16", "18", "20"],
+      "answer": "16",
+      "category": "logical"
+    },
+    {
+      "question": "If a ratio of boys to girls is 3:2 in a class of 25, how many girls?",
+      "options": ["10", "12", "15", "20"],
+      "answer": "10",
+      "category": "quantitative"
+    },
+    {
+      "question": "If you are a team lead and two members are arguing, what do you do?",
+      "options": [
+        "Join the argument",
+        "Help them resolve it calmly",
+        "Ignore them",
+        "Report them"
+      ],
+      "answer": "Help them resolve it calmly",
+      "category": "situational"
+    },
+    {
+      "question": "What comes next: 2, 5, 10, 17, __",
+      "options": ["24", "26", "28", "30"],
+      "answer": "26",
+      "category": "logical"
+    },
+    {
+      "question": "Find the odd one out: Cat, Dog, Cow, Book",
+      "options": ["Cat", "Dog", "Cow", "Book"],
+      "answer": "Book",
+      "category": "logical"
+    }
+  ],
+  "advanced": [
+    {
+      "question": "A train travels 60 km in 1.5 hours. What is its average speed?",
+      "options": ["40 km/h", "45 km/h", "50 km/h", "60 km/h"],
+      "answer": "40 km/h",
+      "category": "quantitative"
+    },
+    {
+      "question": "If the probability of an event is 0.6, what is the probability of it not occurring?",
+      "options": ["0.2", "0.3", "0.4", "0.5"],
+      "answer": "0.4",
+      "category": "quantitative"
+    },
+    {
+      "question": "A shopkeeper mixes 2 kg of sugar at Rs. 40/kg with 3 kg at Rs. 50/kg. What is the average price per kg?",
+      "options": ["46", "45", "48", "50"],
+      "answer": "46",
+      "category": "quantitative"
+    },
+    {
+      "question": "A project requires teamwork, but one member is not contributing. What should you do?",
+      "options": [
+        "Do all the work yourself",
+        "Talk to the member and encourage them",
+        "Complain to the manager",
+        "Ignore the issue"
+      ],
+      "answer": "Talk to the member and encourage them",
+      "category": "situational"
+    },
+    {
+      "question": "If a puzzle piece fits nowhere, what can you infer?",
+      "options": [
+        "It's broken",
+        "You made a mistake elsewhere",
+        "It belongs to another puzzle",
+        "All of the above"
+      ],
+      "answer": "All of the above",
+      "category": "logical"
+    },
+    {
+      "question": "If 3x + 2 = 17, what is x?",
+      "options": ["3", "4", "5", "6"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "If a machine produces 12 items every 4 minutes, how many in 1 hour?",
+      "options": ["120", "150", "180", "240"],
+      "answer": "180",
+      "category": "quantitative"
+    },
+    {
+      "question": "A number divided by 3 gives 21. What is the number?",
+      "options": ["61", "62", "63", "64"],
+      "answer": "63",
+      "category": "quantitative"
+    },
+    {
+      "question": "What is the missing number: 2, 6, 12, ?, 30",
+      "options": ["18", "20", "22", "24"],
+      "answer": "20",
+      "category": "logical"
+    },
+    {
+      "question": "A person is known to be truthful 3 out of 4 times. He throws a die and reports that it is a six. What is the probability it is actually a six?",
+      "options": ["1/6", "1/4", "3/8", "3/7"],
+      "answer": "3/7",
+      "category": "quantitative"
+    },
+    {
+      "question": "A team is under pressure to deliver. What should a good leader do?",
+      "options": [
+        "Blame the team for delays",
+        "Motivate and support the team",
+        "Do nothing",
+        "Leave the project"
+      ],
+      "answer": "Motivate and support the team",
+      "category": "situational"
+    },
+    {
+      "question": "If 25% of a number is 45, what is the number?",
+      "options": ["100", "120", "150", "180"],
+      "answer": "180",
+      "category": "quantitative"
+    },
+    {
+      "question": "A puzzle has 100 pieces. If you have placed 86, how many are left?",
+      "options": ["10", "12", "14", "16"],
+      "answer": "14",
+      "category": "logical"
+    },
+    {
+      "question": "If a ratio of boys to girls is 5:3 in a class of 40, how many girls?",
+      "options": ["10", "12", "15", "20"],
+      "answer": "15",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the next number: 2, 12, 30, 56, __",
+      "options": ["90", "92", "110", "120"],
+      "answer": "90",
+      "category": "logical"
+    }
+  ]
+}

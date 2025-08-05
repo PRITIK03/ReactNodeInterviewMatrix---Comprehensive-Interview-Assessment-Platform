@@ -1,0 +1,333 @@
+{
+  "beginner": [
+    {
+      "question": "What is 10% of 80?",
+      "options": ["8", "10", "12", "14"],
+      "answer": "8",
+      "category": "quantitative"
+    },
+    {
+      "question": "Choose the correct sentence.",
+      "options": [
+        "He don't like coffee.",
+        "He doesn't like coffee.",
+        "He don't likes coffee.",
+        "He does not likes coffee."
+      ],
+      "answer": "He doesn't like coffee.",
+      "category": "english"
+    },
+    {
+      "question": "Find the next number in the series: 2, 4, 8, __",
+      "options": ["12", "14", "16", "18"],
+      "answer": "16",
+      "category": "logical"
+    },
+    {
+      "question": "What is the synonym for 'fast'?",
+      "options": ["quick", "slow", "sad", "late"],
+      "answer": "quick",
+      "category": "english"
+    },
+    {
+      "question": "Which number is even?",
+      "options": ["11", "13", "18", "19"],
+      "answer": "18",
+      "category": "quantitative"
+    },
+    {
+      "question": "Arrange the words: 'morning in I the run'",
+      "options": [
+        "I run in the morning",
+        "I in the morning run",
+        "I the morning run in",
+        "Run in the morning I"
+      ],
+      "answer": "I run in the morning",
+      "category": "english"
+    },
+    {
+      "question": "What is 25% of 40?",
+      "options": ["5", "10", "15", "20"],
+      "answer": "10",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which is the odd one out: Cat, Dog, Cow, Table",
+      "options": ["Cat", "Dog", "Cow", "Table"],
+      "answer": "Table",
+      "category": "logical"
+    },
+    {
+      "question": "What is the antonym of 'hot'?",
+      "options": ["warm", "cold", "fast", "cool"],
+      "answer": "cold",
+      "category": "english"
+    },
+    {
+      "question": "If 5 pens cost Rs. 25, what is the price of one pen?",
+      "options": ["1", "3", "5", "7"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which shape has three sides?",
+      "options": ["Square", "Triangle", "Circle", "Rectangle"],
+      "answer": "Triangle",
+      "category": "logical"
+    },
+    {
+      "question": "Find the next in pattern: 10, 20, 30, __",
+      "options": ["35", "40", "45", "50"],
+      "answer": "40",
+      "category": "logical"
+    },
+    {
+      "question": "What is the opposite of 'tall'?",
+      "options": ["short", "small", "tiny", "big"],
+      "answer": "short",
+      "category": "english"
+    },
+    {
+      "question": "If 18 - 7 = ?",
+      "options": ["9", "10", "11", "12"],
+      "answer": "11",
+      "category": "quantitative"
+    },
+    {
+      "question": "Choose the correct email closing:",
+      "options": [
+        "Yours truly,",
+        "Yours loving,",
+        "Yours affectionately,",
+        "Yours friendly,"
+      ],
+      "answer": "Yours truly,",
+      "category": "english"
+    }
+  ],
+  "intermediate": [
+    {
+      "question": "If the average of 5, 8, and 15 is __?",
+      "options": ["8", "9", "10", "11"],
+      "answer": "9",
+      "category": "quantitative"
+    },
+    {
+      "question": "Choose the correct rearrangement: 'meeting / confirm / please / your'",
+      "options": [
+        "Please confirm your meeting",
+        "Meeting please confirm your",
+        "Your meeting please confirm",
+        "Confirm your meeting please"
+      ],
+      "answer": "Please confirm your meeting",
+      "category": "english"
+    },
+    {
+      "question": "If 30% of a number is 18, what is the number?",
+      "options": ["20", "40", "50", "60"],
+      "answer": "60",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the odd one out: Bat, Ball, Stump, Chair",
+      "options": ["Bat", "Ball", "Stump", "Chair"],
+      "answer": "Chair",
+      "category": "logical"
+    },
+    {
+      "question": "Which is the synonym for 'happy'?",
+      "options": ["sad", "joyful", "angry", "hungry"],
+      "answer": "joyful",
+      "category": "english"
+    },
+    {
+      "question": "If 15 is subtracted from 45, what is left?",
+      "options": ["20", "25", "30", "35"],
+      "answer": "30",
+      "category": "quantitative"
+    },
+    {
+      "question": "What comes next: 3, 6, 12, 24, __",
+      "options": ["28", "32", "36", "48"],
+      "answer": "48",
+      "category": "logical"
+    },
+    {
+      "question": "If all apples are fruits, and all fruits are sweet, are all apples sweet?",
+      "options": ["Yes", "No", "Cannot determine", "Sometimes"],
+      "answer": "Yes",
+      "category": "logical"
+    },
+    {
+      "question": "Which is the antonym of 'difficult'?",
+      "options": ["easy", "hard", "slow", "fast"],
+      "answer": "easy",
+      "category": "english"
+    },
+    {
+      "question": "If the price of a shirt increases by 10% and the new price is Rs. 110, what was the original price?",
+      "options": ["90", "95", "100", "105"],
+      "answer": "100",
+      "category": "quantitative"
+    },
+    {
+      "question": "Choose the correct tone for a business email:",
+      "options": [
+        "Please send ASAP.",
+        "Kindly send at your earliest convenience.",
+        "Send quickly.",
+        "Don't delay."
+      ],
+      "answer": "Kindly send at your earliest convenience.",
+      "category": "english"
+    },
+    {
+      "question": "If the sum of three consecutive numbers is 81, what is the middle number?",
+      "options": ["25", "27", "29", "30"],
+      "answer": "27",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the next in series: 6, 12, 24, __",
+      "options": ["30", "36", "48", "60"],
+      "answer": "48",
+      "category": "logical"
+    },
+    {
+      "question": "Arrange the words: 'request / meeting / schedule / kindly'",
+      "options": [
+        "Kindly schedule meeting request",
+        "Kindly request meeting schedule",
+        "Kindly request to schedule meeting",
+        "Schedule kindly request meeting"
+      ],
+      "answer": "Kindly request to schedule meeting",
+      "category": "english"
+    },
+    {
+      "question": "If the ratio of boys to girls is 3:2 in a class of 25, how many girls?",
+      "options": ["10", "12", "15", "20"],
+      "answer": "10",
+      "category": "quantitative"
+    }
+  ],
+  "advanced": [
+    {
+      "question": "If 3x + 2 = 17, what is x?",
+      "options": ["3", "4", "5", "6"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "Select the best closing for a reply-all email:",
+      "options": [
+        "Thanks and Regards,",
+        "Bye.",
+        "Over and Out.",
+        "Come again."
+      ],
+      "answer": "Thanks and Regards,",
+      "category": "english"
+    },
+    {
+      "question": "Find the missing term: 2, 6, 12, 20, __",
+      "options": ["24", "28", "30", "36"],
+      "answer": "30",
+      "category": "logical"
+    },
+    {
+      "question": "If 50% of a number is 45, what is the number?",
+      "options": ["60", "75", "80", "90"],
+      "answer": "90",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which is the odd one: Pen, Pencil, Eraser, Notebook",
+      "options": ["Pen", "Pencil", "Eraser", "Notebook"],
+      "answer": "Notebook",
+      "category": "logical"
+    },
+    {
+      "question": "If the sum of three consecutive odd numbers is 81, what is the largest?",
+      "options": ["25", "27", "29", "31"],
+      "answer": "29",
+      "category": "quantitative"
+    },
+    {
+      "question": "Choose the most appropriate email subject for a job application:",
+      "options": [
+        "Job",
+        "Application",
+        "Application for Software Engineer Position",
+        "Software"
+      ],
+      "answer": "Application for Software Engineer Position",
+      "category": "english"
+    },
+    {
+      "question": "If a suitcase costs Rs. 360 after a 10% discount, what was its original price?",
+      "options": ["380", "400", "420", "450"],
+      "answer": "400",
+      "category": "quantitative"
+    },
+    {
+      "question": "Select the correct jumbled sentence: 'the / was / successful / meeting'",
+      "options": [
+        "The meeting was successful",
+        "Meeting was the successful",
+        "Was successful the meeting",
+        "Was the successful meeting"
+      ],
+      "answer": "The meeting was successful",
+      "category": "english"
+    },
+    {
+      "question": "If the probability of rain is 0.8, what is the probability of no rain?",
+      "options": ["0.2", "0.3", "0.5", "0.8"],
+      "answer": "0.2",
+      "category": "quantitative"
+    },
+    {
+      "question": "Which comes next: 12, 24, 48, __",
+      "options": ["60", "72", "96", "120"],
+      "answer": "96",
+      "category": "logical"
+    },
+    {
+      "question": "Choose the correct formal closing:",
+      "options": [
+        "See ya!",
+        "Yours faithfully,",
+        "Cheers,",
+        "Take care,"
+      ],
+      "answer": "Yours faithfully,",
+      "category": "english"
+    },
+    {
+      "question": "If the cost of 3 books is Rs. 150, what is the cost of 7 books?",
+      "options": ["300", "350", "400", "450"],
+      "answer": "350",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the next in pattern: 11, 22, 44, __",
+      "options": ["55", "66", "77", "88"],
+      "answer": "88",
+      "category": "logical"
+    },
+    {
+      "question": "Arrange for a meeting tomorrow. Which is the best sentence?",
+      "options": [
+        "Tomorrow meeting arrange.",
+        "Please arrange a meeting for tomorrow.",
+        "Arrange tomorrow meeting please.",
+        "Meeting tomorrow arrange."
+      ],
+      "answer": "Please arrange a meeting for tomorrow.",
+      "category": "english"
+    }
+  ]
+}

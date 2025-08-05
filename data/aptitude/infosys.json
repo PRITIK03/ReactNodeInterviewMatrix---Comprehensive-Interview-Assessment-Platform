@@ -1,0 +1,278 @@
+{
+  "beginner": [
+    {
+      "question": "Complete the pattern: 4, 8, 12, __",
+      "options": ["14", "16", "18", "20"],
+      "answer": "16",
+      "category": "puzzle"
+    },
+    {
+      "question": "Find the next number: 5, 10, 15, __",
+      "options": ["17", "18", "20", "25"],
+      "answer": "20",
+      "category": "puzzle"
+    },
+    {
+      "question": "Arrange in order: 3, 1, 2",
+      "options": ["1,2,3", "3,2,1", "2,1,3", "1,3,2"],
+      "answer": "1,2,3",
+      "category": "puzzle"
+    },
+    {
+      "question": "Which comes next: 7, 14, 21, __",
+      "options": ["24", "28", "35", "42"],
+      "answer": "28",
+      "category": "puzzle"
+    },
+    {
+      "question": "Add the numbers in the grid (2x2): 1 2; 3 4",
+      "options": ["6", "7", "8", "10"],
+      "answer": "10",
+      "category": "puzzle"
+    },
+    {
+      "question": "Find the odd one out: 2, 4, 5, 6",
+      "options": ["2", "4", "5", "6"],
+      "answer": "5",
+      "category": "logical"
+    },
+    {
+      "question": "What is the next term: 1, 2, 4, 8, __",
+      "options": ["10", "12", "14", "16"],
+      "answer": "16",
+      "category": "logical"
+    },
+    {
+      "question": "Find the missing number: 10, 20, __, 40",
+      "options": ["25", "30", "35", "50"],
+      "answer": "30",
+      "category": "logical"
+    },
+    {
+      "question": "What comes next: 21, 23, 25, __",
+      "options": ["27", "29", "31", "33"],
+      "answer": "27",
+      "category": "logical"
+    },
+    {
+      "question": "Which is the odd one out: Apple, Banana, Mango, Potato",
+      "options": ["Apple", "Banana", "Mango", "Potato"],
+      "answer": "Potato",
+      "category": "logical"
+    },
+    {
+      "question": "Find the value: 3 + 7 x 2",
+      "options": ["17", "13", "20", "23"],
+      "answer": "17",
+      "category": "quantitative"
+    },
+    {
+      "question": "What is 25% of 80?",
+      "options": ["10", "15", "20", "25"],
+      "answer": "20",
+      "category": "quantitative"
+    },
+    {
+      "question": "The average of 4, 7, 9 is __",
+      "options": ["6", "7", "8", "9"],
+      "answer": "7",
+      "category": "quantitative"
+    },
+    {
+      "question": "If 2x = 10, what is x?",
+      "options": ["2", "4", "5", "10"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the sum: 12 + 15 + 8",
+      "options": ["30", "31", "35", "40"],
+      "answer": "35",
+      "category": "quantitative"
+    }
+  ],
+  "intermediate": [
+    {
+      "question": "In a puzzle, there are 5 rows and 4 columns. How many boxes?",
+      "options": ["9", "10", "20", "25"],
+      "answer": "20",
+      "category": "puzzle"
+    },
+    {
+      "question": "Which number is missing? 11, 13, __, 17, 19",
+      "options": ["14", "15", "16", "18"],
+      "answer": "15",
+      "category": "puzzle"
+    },
+    {
+      "question": "Arrange in ascending order: 9, 5, 7",
+      "options": ["5,7,9", "7,5,9", "9,7,5", "5,9,7"],
+      "answer": "5,7,9",
+      "category": "puzzle"
+    },
+    {
+      "question": "A 3x3 grid has how many boxes?",
+      "options": ["6", "9", "12", "15"],
+      "answer": "9",
+      "category": "puzzle"
+    },
+    {
+      "question": "Fill in the series: 5, 10, 20, 40, __",
+      "options": ["60", "70", "80", "90"],
+      "answer": "80",
+      "category": "logical"
+    },
+    {
+      "question": "Which number comes next: 2, 5, 10, 17, __",
+      "options": ["24", "26", "28", "30"],
+      "answer": "26",
+      "category": "logical"
+    },
+    {
+      "question": "If a puzzle has 8 pieces and 3 are placed, how many left?",
+      "options": ["4", "5", "6", "8"],
+      "answer": "5",
+      "category": "logical"
+    },
+    {
+      "question": "If all squares are rectangles, are all rectangles squares?",
+      "options": ["Yes", "No", "Cannot determine", "Sometimes"],
+      "answer": "No",
+      "category": "logical"
+    },
+    {
+      "question": "What is 35% of 120?",
+      "options": ["35", "42", "48", "50"],
+      "answer": "42",
+      "category": "quantitative"
+    },
+    {
+      "question": "If 5x + 10 = 35, what is x?",
+      "options": ["3", "4", "5", "6"],
+      "answer": "5",
+      "category": "quantitative"
+    },
+    {
+      "question": "Average of 12, 15, 21 is __",
+      "options": ["14", "15", "16", "18"],
+      "answer": "16",
+      "category": "quantitative"
+    },
+    {
+      "question": "If a grid has 4 rows and 6 columns, how many boxes?",
+      "options": ["16", "20", "24", "30"],
+      "answer": "24",
+      "category": "puzzle"
+    },
+    {
+      "question": "Arrange in order: 11, 14, 12",
+      "options": ["11,12,14", "14,12,11", "12,11,14", "11,14,12"],
+      "answer": "11,12,14",
+      "category": "puzzle"
+    },
+    {
+      "question": "Which number is missing? 21, 23, __, 27",
+      "options": ["24", "25", "26", "28"],
+      "answer": "25",
+      "category": "logical"
+    },
+    {
+      "question": "Find the sum: 17 + 21 + 15",
+      "options": ["45", "48", "53", "57"],
+      "answer": "53",
+      "category": "quantitative"
+    }
+  ],
+  "advanced": [
+    {
+      "question": "A puzzle has 100 pieces. If 86 are placed, how many are left?",
+      "options": ["10", "12", "14", "16"],
+      "answer": "14",
+      "category": "puzzle"
+    },
+    {
+      "question": "Arrange in descending order: 22, 18, 25, 19",
+      "options": ["25,22,19,18", "25,22,18,19", "25,22,19,18", "25,19,22,18"],
+      "answer": "25,22,19,18",
+      "category": "puzzle"
+    },
+    {
+      "question": "If the difference between two numbers is 12 and their sum is 52, what is the larger number?",
+      "options": ["20", "32", "36", "40"],
+      "answer": "32",
+      "category": "quantitative"
+    },
+    {
+      "question": "A grid has 7 rows and 8 columns. How many boxes?",
+      "options": ["56", "60", "65", "70"],
+      "answer": "56",
+      "category": "puzzle"
+    },
+    {
+      "question": "Which comes next: 12, 24, 48, __",
+      "options": ["60", "72", "96", "120"],
+      "answer": "96",
+      "category": "logical"
+    },
+    {
+      "question": "Find the next number: 9, 18, 27, __, 45",
+      "options": ["32", "34", "36", "39"],
+      "answer": "36",
+      "category": "logical"
+    },
+    {
+      "question": "What is the average of 21, 31, 41?",
+      "options": ["31", "33", "35", "37"],
+      "answer": "31",
+      "category": "quantitative"
+    },
+    {
+      "question": "If 3x + 2y = 24, x = 4, y = ?",
+      "options": ["2", "4", "6", "8"],
+      "answer": "6",
+      "category": "quantitative"
+    },
+    {
+      "question": "In a grid, if the sum of the first row is 24 and the second is 36, what is the total?",
+      "options": ["50", "60", "70", "80"],
+      "answer": "60",
+      "category": "puzzle"
+    },
+    {
+      "question": "If 50% of a number is 45, what is the number?",
+      "options": ["60", "75", "80", "90"],
+      "answer": "90",
+      "category": "quantitative"
+    },
+    {
+      "question": "Solve for x: 4x – 12 = 28",
+      "options": ["8", "9", "10", "11"],
+      "answer": "10",
+      "category": "quantitative"
+    },
+    {
+      "question": "Find the odd one: 15, 18, 20, 23",
+      "options": ["15", "18", "20", "23"],
+      "answer": "23",
+      "category": "logical"
+    },
+    {
+      "question": "If sum of three consecutive numbers is 60, what is the middle number?",
+      "options": ["18", "19", "20", "21"],
+      "answer": "20",
+      "category": "logical"
+    },
+    {
+      "question": "Arrange in order: 35, 27, 41",
+      "options": ["27,35,41", "35,27,41", "41,35,27", "27,41,35"],
+      "answer": "27,35,41",
+      "category": "puzzle"
+    },
+    {
+      "question": "If a square’s perimeter is 40, what is the length of one side?",
+      "options": ["8", "10", "12", "14"],
+      "answer": "10",
+      "category": "quantitative"
+    }
+  ]
+}

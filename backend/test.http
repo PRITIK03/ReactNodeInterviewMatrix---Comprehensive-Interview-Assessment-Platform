@@ -1,0 +1,7 @@
+POST http://localhost:5000/api/aptitude
+Content-Type: application/json
+
+{
+  "company": "wipro",
+  "level": "beginner"
+}
