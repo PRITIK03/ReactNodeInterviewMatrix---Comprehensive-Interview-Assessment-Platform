@@ -8,7 +8,7 @@
 ![Python](https://img.shields.io/badge/Python-FastAPI-3776AB?logo=python)
 ![License](https://img.shields.io/badge/License-MIT-green)
 
----
+--
 
 ## 📋 Table of Contents
 
