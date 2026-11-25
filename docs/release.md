@@ -75,7 +75,7 @@ See the [evaluation and readiness architecture](architecture/evaluation-and-read
 
 | Check | Local result |
 | --- | --- |
-| Backend and API | 26 tests passed on SQLite. The PostgreSQL-only import case was skipped. All 27 passed using a disposable PostgreSQL instance, including the migration and overwrite-refusal test. |
+| Backend and API | 27 tests passed on SQLite. The PostgreSQL-only import case was skipped. All 28 passed using a disposable PostgreSQL instance, including the migration and overwrite-refusal test. |
 | Evaluation quality | Golden schema and arithmetic cases passed. All seven deliberately invalid model responses were rejected. A provider failure produced zero additional scorecards. The human-agreement metric is unavailable without independent labels. |
 | Frontend | Nine component and audio-controller tests passed. Three Chromium browser tests passed on Monaco typing, indentation, undo/redo, paste, resizing, draft recovery and local audio playback. |
 | Integrated demo | The rehearsal used real private S3-compatible storage, the OS scanner, Celery, the parser, the assigned assessment and a human-reviewed scorecard. Original document deletion completed. |

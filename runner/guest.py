@@ -2,9 +2,11 @@
 
 import hashlib
 import json
-import signal
+import os
 import sys
 import tempfile
+from contextlib import ExitStack
+from threading import Thread
 from pathlib import Path
 
 import wasmtime as wasm
@@ -42,26 +44,27 @@ def execute(source, stdin):
     wasi.argv = ["python", "-B", "-S", "-c", source]
     wasi.env = [("PYTHONHASHSEED", "0"), ("PYTHONIOENCODING", "utf-8")]
     # Preview 1: no preopened sockets, directories, inherited env or descriptors.
-    with tempfile.TemporaryDirectory() as tmp:
+    with tempfile.TemporaryDirectory() as tmp, ExitStack() as handles:
         stream = Path(tmp) / "input"
         stream.write_bytes(stdin.encode())
         wasi.stdin_file = str(stream)
-        native_output = sys.platform.startswith("linux")
-        if native_output:
-            # Keep native WASI shutdown independent of CPython callback finalizers.
-            # These handles are private to this guest. No directory is preopened.
-            import resource
+        readers = []
+        if sys.platform.startswith("linux"):
+            # Let native WASI write to pipes. Only the bounded prefix enters memory.
+            # Releasing the store closes its writer and lets the reader observe EOF.
+            def drain(reader, target):
+                with reader:
+                    while chunk := reader.read(8192):
+                        capture(target, chunk)
 
-            stdout_path, stderr_path = Path(tmp) / "out", Path(tmp) / "err"
-            wasi.stdout_file = str(stdout_path)
-            wasi.stderr_file = str(stderr_path)
-            soft, hard = resource.getrlimit(resource.RLIMIT_FSIZE)
-            limit = min(
-                [OUTPUT_LIMIT + 1]
-                + [v for v in (soft, hard) if v != resource.RLIM_INFINITY]
-            )
-            resource.setrlimit(resource.RLIMIT_FSIZE, (limit, hard))
-            signal.signal(signal.SIGXFSZ, signal.SIG_IGN)
+            for name, target in (("stdout_file", out), ("stderr_file", err)):
+                read_fd, write_fd = os.pipe()
+                with os.fdopen(write_fd, "wb") as writer:
+                    reader = handles.enter_context(os.fdopen(read_fd, "rb"))
+                    setattr(wasi, name, f"/proc/self/fd/{writer.fileno()}")
+                    thread = Thread(target=drain, args=(reader, target), daemon=True)
+                    thread.start()
+                    readers.append(thread)
         else:
             wasi.stdout_custom = lambda chunk: capture(out, chunk)
             wasi.stderr_custom = lambda chunk: capture(err, chunk)
@@ -81,11 +84,8 @@ def execute(source, stdin):
             )
         finally:
             store.close()
-        if native_output:
-            with stdout_path.open("rb") as output:
-                capture(out, output.read(OUTPUT_LIMIT + 1))
-            with stderr_path.open("rb") as errors:
-                capture(err, errors.read(OUTPUT_LIMIT + 1))
+        for thread in readers:
+            thread.join()
         if status == "runtime_error":
             if b"MemoryError" in err:
                 status = "memory_limit"
