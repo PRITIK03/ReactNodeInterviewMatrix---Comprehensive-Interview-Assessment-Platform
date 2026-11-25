@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 export function Status({ children }) {
   return (
-    <span className="status">{String(children).replaceAll("_", " ")}</span>
+    <span className="status" data-state={String(children)}>
+      {String(children).replaceAll("_", " ")}
+    </span>
   );
 }
 export function Score({ score, total }) {
@@ -84,13 +86,14 @@ export function Feedback({ resource }) {
 }
 export function Dialog({ title, children, onClose }) {
   const ref = React.useRef(null);
+  const titleId = React.useId();
   useEffect(() => {
     ref.current.showModal();
   }, []);
   return (
-    <dialog ref={ref} onCancel={onClose}>
+    <dialog ref={ref} aria-labelledby={titleId} onCancel={onClose}>
       <header>
-        <h2>{title}</h2>
+        <h2 id={titleId}>{title}</h2>
         <button onClick={onClose}>Close</button>
       </header>
       {children}

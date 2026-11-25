@@ -40,6 +40,32 @@ def assessment(client, kind):
     return "/attempts/" + key, client.get(P + "/attempts/" + key).json()
 
 
+def test_practice_catalog_picks_latest_version_per_level(site):
+    client = site("practice", "candidate")
+    original = catalog(client, "coding")
+    with db(True) as conn:
+        # Create another published edition of exactly the same template.
+        conn.execute(
+            "INSERT INTO assessment_version SELECT ?,template,45,published+1 FROM assessment_version WHERE id=?",
+            ("new-practice-edition", original["id"]),
+        )
+    current = client.get(P + "/assessments?current_only=true&limit=100").json()
+    company = [v for v in current if v["company"] == "wipro"]
+    assert len(company) == 6
+    assert {v["kind"] for v in company} == {"aptitude", "coding"}
+    selected = next(
+        v for v in company if v["kind"] == "coding" and v["level"] == "beginner"
+    )
+    assert selected["id"] == "new-practice-edition" and selected["minutes"] == 45
+    assert original["question_count"] > 0
+    all_versions = client.get(P + "/assessments?limit=100").json()
+    assert original["id"] in {v["id"] for v in all_versions}
+    assert (
+        client.get(P + "/assessments?current_only=true&limit=1&offset=1").json()
+        == current[1:2]
+    )
+
+
 def test_integrity_and_recovery(site):
     c = site("one", "candidate")
     other = site("two", "candidate")

@@ -193,3 +193,6 @@ $RECYCLE.BIN/
 # Browser test traces, screenshots and temporary results
 playwright-report/
 test-results/
+
+# Optional locally downloaded artwork. The frontend includes built-in fallbacks.
+/frontend/my-react-app/src/local-art/

@@ -62,13 +62,23 @@ def catalog(
     user=Depends(actor),
     offset: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
+    current_only: bool = False,
 ):
     with db() as c:
         return [
-            dict(r)
-            for r in c.execute(
-                "SELECT v.id,t.company,t.level,t.kind,v.minutes FROM assessment_version v JOIN assessment_template t ON t.id=v.template ORDER BY t.company,t.level,t.kind LIMIT ? OFFSET ?",
-                (limit, offset),
+            dict(row)
+            for row in c.execute(
+                """WITH ranked AS (
+                    SELECT v.id,t.company,t.level,t.kind,v.minutes,
+                      row_number() OVER (PARTITION BY t.company,t.kind,t.level
+                        ORDER BY v.published DESC,v.id DESC) AS position
+                    FROM assessment_version v JOIN assessment_template t ON t.id=v.template
+                )
+                SELECT id,company,level,kind,minutes,
+                  (SELECT count(*) FROM assessment_question q WHERE q.version=ranked.id) AS question_count
+                FROM ranked WHERE position=1 OR ?=0
+                ORDER BY company,kind,level,position LIMIT ? OFFSET ?""",
+                (int(current_only), limit, offset),
             )
         ]
 

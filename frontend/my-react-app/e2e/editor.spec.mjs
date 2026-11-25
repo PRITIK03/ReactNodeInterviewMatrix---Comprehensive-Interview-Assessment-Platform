@@ -86,7 +86,9 @@ test("Monaco preserves Python indentation, paste, undo, resize and recovery", as
     page.getByRole("status").filter({ hasText: "retained" }),
   ).toBeVisible();
   await page.reload();
-  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await expect(
+    page.getByRole("textbox", { name: "Python submission" }),
+  ).toBeVisible();
   await expect.poll(() => value(page)).toBe(pasted);
 });
 test("continuation and terminal statements use the configured indent width", async ({
@@ -199,7 +201,9 @@ test("saved code starts a discussion, speech is editable and the confirmed reply
   await box.fill("It tracks the cumulative sum.");
   await page.getByRole("button", { name: "Save explanation" }).click();
   await page.reload();
-  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await expect(
+    page.getByRole("textbox", { name: "Python submission" }),
+  ).toBeVisible();
   await expect(page.getByText("It tracks the cumulative sum.")).toBeVisible();
   expect(saved).toEqual([{ text: "It tracks the cumulative sum." }]);
 });

@@ -38,3 +38,5 @@
 **/*.docx
 **/*.sqlite*
 **/.git/
+
+frontend/my-react-app/src/local-art/

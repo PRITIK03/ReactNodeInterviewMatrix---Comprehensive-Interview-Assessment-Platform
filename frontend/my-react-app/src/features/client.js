@@ -19,3 +19,10 @@ export async function api(path, method = "GET", body, headers = {}) {
   return data;
 }
 export const date = (t) => new Date(t * 1000).toLocaleString();
+
+export function displayName(value = "") {
+  return (
+    { coding: "Python coding", aptitude: "Aptitude", tcs: "TCS" }[value] ||
+    value.charAt(0).toUpperCase() + value.slice(1)
+  );
+}

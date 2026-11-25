@@ -17,7 +17,7 @@ Open [the workspace](http://127.0.0.1:5173). Keep the launcher running during th
 
 | Component | Local behavior |
 | --- | --- |
-| React 19, Vite, Material UI and Monaco | One browser origin proxies API requests. The Python editor and its worker load on demand. |
+| React 19, Vite, Lucide and Monaco | One browser origin proxies API requests. The Python editor and its worker load on demand. |
 | FastAPI and SQLite | Transactions, foreign keys and immutable published records. The application database lives in `runtime/matrix.sqlite3`. |
 | Dedicated Python execution host | Starts a fresh Wasmtime guest for each public or hidden test. The API and Celery worker never interpret submissions. |
 | Private S3-compatible storage | The launcher runs a portable SeaweedFS process backed by `runtime/objects/`. The database stores object keys, checksums, evidence and consent. |
@@ -42,9 +42,15 @@ Each coding test receives a fresh pinned CPython/WASI image. The host grants std
 
 A remote Judge0-compatible service is an option when assessments need multiple languages or independent execution hosts. This local implementation uses Wasmtime to avoid a Docker or database service installation and keep submissions on the machine. Only the included Python/WASI environment is supported. Optional Gemini coaching sends the candidate’s first submitted solution after an explicit request and consent. Its structured response is separate from every score.
 
+## Practice library
+
+Choose a company, open **Aptitude** or **Python coding**, then start a level. Each level shows its published question count and time limit. Refresh or bookmark a library view to return to it. Opening an attempt requires its owner's session.
+
+The interface ships with company wordmarks and Lucide icons. A local development build can also use the unmodified Python logo at `frontend/my-react-app/src/local-art/python.png`. Git and Docker exclude that folder. A fresh checkout uses the bundled coding icon. [Official Python artwork](https://www.python.org/community/logos/)
+
 ## Demo a code follow-up
 
-Open a Python assessment and type `for item in items:`, press Enter, type `if item:` and press Enter again. Monaco places the cursor four spaces deeper for each block by default. The indent-width control also supports two or eight spaces.
+In **Practice library**, choose a company, open **Python coding**, then start a level. Type `for item in items:`, press Enter, type `if item:` and press Enter again. Monaco places the cursor four spaces deeper for each block by default. The indent-width control also supports two or eight spaces.
 
 Save the draft or choose **Ask about my code**. The discussion cites a line from the saved solution. Answer in the text box or select **Dictate answer**, speak, stop and edit the transcript. **Save explanation** confirms the text. Reopen the attempt to see the response and ask a different question. Each solution supports four questions. The conversation is optional and independent of timed grading.
 
