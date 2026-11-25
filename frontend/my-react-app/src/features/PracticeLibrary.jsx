@@ -7,7 +7,7 @@ import {
   ListChecks,
   Shapes,
   SlidersHorizontal,
-  Terminal,
+  ScanLine,
 } from "lucide-react";
 import { Feedback } from "./ui";
 
@@ -27,31 +27,42 @@ const localArt = import.meta.glob("../local-art/python.png", {
 function focusHeading(element) {
   element?.focus({ preventScroll: true });
 }
-function Cover({ kind }) {
-  const coding = kind === "coding";
+function Specimen({ kind }) {
+  if (kind === "coding")
+    return (
+      <span className="source-specimen" aria-hidden="true">
+        <code>
+          <b>def</b> trace(items):
+        </code>
+        <code>
+          {"    "}
+          <b>for</b> item <b>in</b> items:
+        </code>
+        <code>
+          {"        "}
+          <b>yield</b> item
+        </code>
+      </span>
+    );
   return (
-    <span className={"cover " + (coding ? "ink" : "iris")} aria-hidden="true">
-      {coding ? (
-        <span className="terminal-sheet">
-          <span className="terminal-bar">
-            <i />
-            <i />
-            <i />
-          </span>
-          <span className="terminal-body">
-            <Terminal />
-            <span />
-            <span />
-            <span />
-          </span>
-        </span>
-      ) : (
-        <span className="tiles">
-          {Array.from({ length: 9 }, (_, i) => (
-            <i key={i} />
+    <span className="answer-sheet" aria-hidden="true">
+      <span className="sheet-rule">
+        <ScanLine size={18} />
+      </span>
+      <span className="sheet-line">
+        <i />
+        {["A", "B", "C", "D"].map((x) => (
+          <b key={x}>{x}</b>
+        ))}
+      </span>
+      {[1, 3, 0].map((marked, row) => (
+        <span className="sheet-line" key={row}>
+          <b>{row + 1}</b>
+          {[0, 1, 2, 3].map((n) => (
+            <i key={n} className={n === marked ? "marked" : ""} />
           ))}
         </span>
-      )}
+      ))}
     </span>
   );
 }
@@ -63,7 +74,10 @@ export default function PracticeLibrary({
   start,
   starting,
 }) {
-  if (!catalog.data) return <Feedback resource={catalog} />;
+  if (!catalog.data)
+    return (
+      <Feedback resource={catalog} loading="Loading practice assessments…" />
+    );
   const companies = [...new Set(catalog.data.map((v) => v.company))];
   if (!companies.length)
     return <p className="empty">No published practice assessments yet.</p>;
@@ -84,6 +98,7 @@ export default function PracticeLibrary({
   return (
     <div className="library">
       <nav className="companies" aria-label="Company">
+        <span className="company-label">Company</span>
         {companies.map((name) => (
           <a
             key={name}
@@ -148,32 +163,43 @@ export default function PracticeLibrary({
                 : k === "aptitude"
                   ? Shapes
                   : SlidersHorizontal;
-            const count = assessments.filter((v) => v.kind === k).length;
+            const editions = assessments.filter((v) => v.kind === k);
+            const minutes = [...new Set(editions.map((v) => v.minutes))].sort(
+              (a, b) => a - b,
+            );
+            const duration =
+              minutes.length === 1
+                ? minutes[0]
+                : minutes[0] + "–" + minutes.at(-1);
             return (
               <a
                 className="track"
+                data-kind={k}
                 key={k}
                 href={href + "/" + encodeURIComponent(k)}
                 aria-label={displayName(k)}
               >
-                <Cover kind={k} />
-                <span className="track-body">
-                  <span
-                    className={"track-icon " + (k === "coding" ? "code" : "")}
-                  >
+                <span className="track-cover">
+                  <span className="track-symbol" aria-hidden="true">
                     {k === "coding" && localArt["../local-art/python.png"] ? (
                       <img alt="" src={localArt["../local-art/python.png"]} />
                     ) : (
-                      <Icon />
+                      <Icon size={22} />
                     )}
                   </span>
+                  <Specimen kind={k} />
+                  <strong>{displayName(k)}</strong>
+                </span>
+                <span className="track-footer">
                   <span>
-                    <strong>{displayName(k)}</strong>
-                    <small>
-                      {count} {count === 1 ? "level" : "levels"}
-                    </small>
+                    {editions.length}{" "}
+                    {editions.length === 1 ? "level" : "levels"}
                   </span>
-                  <ArrowUpRight className="go-icon" />
+                  <span>
+                    <Clock3 size={14} />
+                    {duration} min
+                  </span>
+                  <ArrowUpRight size={19} />
                 </span>
               </a>
             );

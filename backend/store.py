@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS question_version(id TEXT PRIMARY KEY,question TEXT RE
 CREATE TABLE IF NOT EXISTS assessment_question(version TEXT REFERENCES assessment_version,position INTEGER,question TEXT REFERENCES question_version,PRIMARY KEY(version,position),UNIQUE(version,question));
 CREATE TABLE IF NOT EXISTS invitation(id TEXT PRIMARY KEY,application TEXT REFERENCES application,version TEXT REFERENCES assessment_version,token TEXT UNIQUE,expires INTEGER,accepted INTEGER);
 CREATE TABLE IF NOT EXISTS assessment_attempt(id TEXT PRIMARY KEY,owner TEXT REFERENCES account,version TEXT REFERENCES assessment_version,invitation TEXT UNIQUE REFERENCES invitation,request_key TEXT,started INTEGER,expires INTEGER,status TEXT,submitted INTEGER,score INTEGER,total INTEGER,UNIQUE(owner,request_key));
+CREATE INDEX IF NOT EXISTS attempt_owner_history ON assessment_attempt(owner,started DESC,id DESC);
 CREATE TABLE IF NOT EXISTS answer(attempt TEXT REFERENCES assessment_attempt,question TEXT REFERENCES question_version,value TEXT,PRIMARY KEY(attempt,question));
 CREATE TABLE IF NOT EXISTS code_followup(
     attempt TEXT REFERENCES assessment_attempt ON DELETE CASCADE,question TEXT REFERENCES question_version,

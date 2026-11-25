@@ -30,14 +30,14 @@ export default function Readiness() {
     window.MediaRecorder,
   );
   return (
-    <section>
+    <section className="preflight">
       <h2>Microphone preflight</h2>
       <p>
         The level check uses your microphone when you enable it. Recording a
         four-second playback sample is optional and stays in this tab. Stopping
         the check discards it.
       </p>
-      <dl>
+      <dl className="checklist">
         <dt>Browser support</dt>
         <dd>
           {supported
@@ -47,7 +47,7 @@ export default function Readiness() {
         <dt>Permission</dt>
         <dd>{state.permission}</dd>
         <dt>Overall readiness</dt>
-        <dd role="status">
+        <dd role="status" data-ready={audioReady(state)}>
           {audioReady(state)
             ? "Verified by signal and playback"
             : "Checks outstanding"}
@@ -56,7 +56,13 @@ export default function Readiness() {
       <button disabled={!supported} onClick={() => ctrl.current.start()}>
         {state.running ? "Restart microphone" : "Enable microphone"}
       </button>{" "}
-      <button onClick={() => ctrl.current.stop()}>Stop and discard</button>
+      <button
+        className="quiet"
+        disabled={!state.running && !state.url && !state.issue}
+        onClick={() => ctrl.current.stop()}
+      >
+        Stop and discard
+      </button>
       {state.issue && <p role="alert">{state.issue}</p>}
       {state.running && (
         <>
@@ -73,7 +79,7 @@ export default function Readiness() {
               ))}
             </select>
           </label>
-          <label>
+          <label className="signal-level">
             Live input level <meter min="0" max="1" value={state.level} />
           </label>
           <p>

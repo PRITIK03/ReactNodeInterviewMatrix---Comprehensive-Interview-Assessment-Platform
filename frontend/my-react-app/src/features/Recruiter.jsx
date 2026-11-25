@@ -1,7 +1,16 @@
 import { useResource } from "./useResource";
 import React, { useState } from "react";
 import { api } from "./client";
-import { Dialog, Form, Field, Panel, Table, Status, Feedback } from "./ui";
+import {
+  Dialog,
+  Form,
+  Field,
+  Panel,
+  Table,
+  Status,
+  Feedback,
+  Pager,
+} from "./ui";
 function Assignments({ jobVersion, versions, revision, reload }) {
   const assigned = useResource(
     "/job-versions/" + jobVersion + "/assessments",
@@ -59,11 +68,14 @@ export default function Recruiter({ revision, reload, versions }) {
   }
   return (
     <>
-      <Panel title="Job library">
-        <button onClick={() => open()}>Create job</button>
+      <Panel
+        title="Job library"
+        action={<button onClick={() => open()}>Create job</button>}
+      >
         <Feedback resource={jobs} />
         {jobs.data && (
           <Table
+            empty="No jobs on this page."
             headers={["Role", "Version", "Publication", "Criteria"]}
             rows={jobs.data.map((j) => [
               j.id,
@@ -86,15 +98,7 @@ export default function Recruiter({ revision, reload, versions }) {
             ])}
           />
         )}
-        <button disabled={!jobOffset} onClick={() => jobPage(jobOffset - 50)}>
-          Previous
-        </button>{" "}
-        <button
-          disabled={jobs.data?.length !== 50}
-          onClick={() => jobPage(jobOffset + 50)}
-        >
-          Next
-        </button>
+        <Pager offset={jobOffset} onPage={jobPage} count={jobs.data?.length} />
       </Panel>
       {assignment && (
         <Assignments
@@ -139,35 +143,25 @@ export default function Recruiter({ revision, reload, versions }) {
             </Field>
             <h4>Evaluation criteria</h4>
             {weights.map((w, i) => (
-              <div key={i} className="row">
-                <input
-                  aria-label="Criterion name"
-                  placeholder="Criterion"
-                  value={w.name}
-                  required
-                  onChange={(e) =>
-                    setWeights(
-                      weights.map((r, j) =>
-                        i === j ? { ...r, name: e.target.value } : r,
-                      ),
-                    )
-                  }
-                />
-                <input
-                  aria-label="Weight percent"
-                  type="number"
-                  min="1"
-                  max="100"
-                  required
-                  value={w.weight}
-                  onChange={(e) =>
-                    setWeights(
-                      weights.map((r, j) =>
-                        i === j ? { ...r, weight: Number(e.target.value) } : r,
-                      ),
-                    )
-                  }
-                />
+              <fieldset key={i} className="rubric-entry">
+                <legend>Criterion {i + 1}</legend>
+                <Field label="Criterion name">
+                  <input
+                    value={w.name}
+                    required
+                    onChange={(e) => field(i, "name", e.target.value)}
+                  />
+                </Field>
+                <Field label="Weight percent">
+                  <input
+                    type="number"
+                    min="1"
+                    max="100"
+                    required
+                    value={w.weight}
+                    onChange={(e) => field(i, "weight", Number(e.target.value))}
+                  />
+                </Field>
                 <label>
                   Evidence type
                   <select
@@ -185,7 +179,9 @@ export default function Recruiter({ revision, reload, versions }) {
                       "coding",
                       "code_review",
                     ].map((t) => (
-                      <option key={t}>{t}</option>
+                      <option key={t} value={t}>
+                        {t.replaceAll("_", " ")}
+                      </option>
                     ))}
                   </select>
                 </label>
@@ -234,7 +230,7 @@ export default function Recruiter({ revision, reload, versions }) {
                 >
                   Remove
                 </button>
-              </div>
+              </fieldset>
             ))}
             <button
               type="button"
@@ -250,23 +246,26 @@ export default function Recruiter({ revision, reload, versions }) {
         </Dialog>
       )}
       <Panel title="Candidate directory">
-        <Form
-          label="Add candidate"
-          submit={async (f, form) => {
-            await api("/candidates", "POST", f);
-            form.reset();
-            reload();
-          }}
-        >
-          <div className="row">
-            <Field label="Candidate name">
-              <input name="name" required />
-            </Field>
-            <Field label="Contact email">
-              <input name="email" type="email" required />
-            </Field>
-          </div>
-        </Form>
+        <details className="command">
+          <summary>Add a candidate</summary>
+          <Form
+            label="Add candidate"
+            submit={async (f, form) => {
+              await api("/candidates", "POST", f);
+              form.reset();
+              reload();
+            }}
+          >
+            <div className="row">
+              <Field label="Candidate name">
+                <input name="name" required />
+              </Field>
+              <Field label="Contact email">
+                <input name="email" type="email" required />
+              </Field>
+            </div>
+          </Form>
+        </details>
         <Field label="Find candidate">
           <input
             type="search"
@@ -280,50 +279,45 @@ export default function Recruiter({ revision, reload, versions }) {
         <Feedback resource={people} />
         {people.data && (
           <Table
+            empty="No candidates match this view."
             headers={["Candidate", "Contact"]}
             rows={people.data.map((p) => [p.id, p.name, p.email])}
           />
         )}
-        <button disabled={!offset} onClick={() => page(offset - 50)}>
-          Previous
-        </button>{" "}
-        <button
-          disabled={people.data?.length !== 50}
-          onClick={() => page(offset + 50)}
-        >
-          Next
-        </button>
-        <h3>Create application</h3>
-        <Form
-          label="Add to pipeline"
-          submit={async (f) => {
-            await api("/applications", "POST", f);
-            reload();
-          }}
-        >
-          <div className="row">
-            <Field label="Candidate">
-              <select name="candidate" required>
-                {people.data?.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))}
-              </select>
-            </Field>
-            <Field label="Published role">
-              <select name="job_version" required>
-                {jobs.data
-                  ?.filter((j) => j.status === "published")
-                  .map((j) => (
-                    <option key={j.id} value={j.id}>
-                      {j.title} · v{j.revision}
+        <Pager offset={offset} onPage={page} count={people.data?.length} />
+        <details className="command">
+          <summary>Create application</summary>
+          <Form
+            label="Add to pipeline"
+            submit={async (f) => {
+              await api("/applications", "POST", f);
+              reload();
+            }}
+          >
+            <div className="row">
+              <Field label="Candidate">
+                <select name="candidate" required>
+                  {people.data?.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
                     </option>
                   ))}
-              </select>
-            </Field>
-          </div>
-        </Form>
+                </select>
+              </Field>
+              <Field label="Published role">
+                <select name="job_version" required>
+                  {jobs.data
+                    ?.filter((j) => j.status === "published")
+                    .map((j) => (
+                      <option key={j.id} value={j.id}>
+                        {j.title} · v{j.revision}
+                      </option>
+                    ))}
+                </select>
+              </Field>
+            </div>
+          </Form>
+        </details>
       </Panel>
     </>
   );

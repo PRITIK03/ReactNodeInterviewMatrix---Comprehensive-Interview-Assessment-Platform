@@ -9,15 +9,23 @@ export function Status({ children }) {
 export function Score({ score, total }) {
   return <strong>{score == null ? "Pending" : score + " / " + total}</strong>;
 }
-export function Panel({ title, children }) {
+export function Panel({ title, children, action }) {
   return (
     <section>
-      <h2>{title}</h2>
+      {action ? (
+        <header className="section-heading">
+          <h2>{title}</h2>
+          {action}
+        </header>
+      ) : (
+        <h2>{title}</h2>
+      )}
       {children}
     </section>
   );
 }
-export function Table({ headers, rows }) {
+export function Table({ headers, rows, empty = "No records yet." }) {
+  if (!rows.length) return <p className="empty">{empty}</p>;
   return (
     <div className="scroll">
       <table>
@@ -38,7 +46,19 @@ export function Table({ headers, rows }) {
           ))}
         </tbody>
       </table>
-      {!rows.length && <p className="muted">No records yet.</p>}
+    </div>
+  );
+}
+export function Pager({ offset, count, onPage }) {
+  if (!offset && count !== 50) return null;
+  return (
+    <div className="pager">
+      <button disabled={!offset} onClick={() => onPage(offset - 50)}>
+        Previous
+      </button>
+      <button disabled={count !== 50} onClick={() => onPage(offset + 50)}>
+        Next
+      </button>
     </div>
   );
 }
@@ -77,11 +97,20 @@ export function Form({ submit, label, children }) {
     </form>
   );
 }
-export function Feedback({ resource }) {
+export function Feedback({ resource, loading = "Loading…" }) {
   return resource.error ? (
-    <p role="alert">{resource.error}</p>
+    <div className="resource-error" role="alert">
+      {resource.error}{" "}
+      {resource.retry && (
+        <button type="button" className="quiet" onClick={resource.retry}>
+          Try again
+        </button>
+      )}
+    </div>
   ) : resource.data === null ? (
-    <p role="status">Loading…</p>
+    <p className="loading" role="status">
+      {loading}
+    </p>
   ) : null;
 }
 export function Dialog({ title, children, onClose }) {

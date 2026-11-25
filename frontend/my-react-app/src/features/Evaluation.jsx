@@ -98,14 +98,31 @@ export default function Evaluation({ application, admin }) {
               reviewing.
             </p>
           )}
-          <p>
-            Reference score{" "}
-            {card.reference_aggregate.score_percent ?? "Incomplete"} ·
-            Human-reviewed score{" "}
-            {card.reviewed_aggregate.score_percent ?? "Incomplete"} · Approved
-            weight {card.reviewed_aggregate.covered_weight}/
-            {card.reviewed_aggregate.scope_weight}
-          </p>
+          <dl className="score-ledger">
+            <div>
+              <dt>Reference score</dt>
+              <dd>
+                {card.reference_aggregate.score_percent == null
+                  ? "Incomplete"
+                  : card.reference_aggregate.score_percent + "%"}
+              </dd>
+            </div>
+            <div>
+              <dt>Human-reviewed score</dt>
+              <dd>
+                {card.reviewed_aggregate.score_percent == null
+                  ? "Incomplete"
+                  : card.reviewed_aggregate.score_percent + "%"}
+              </dd>
+            </div>
+            <div>
+              <dt>Approved weight</dt>
+              <dd>
+                {card.reviewed_aggregate.covered_weight}/
+                {card.reviewed_aggregate.scope_weight}
+              </dd>
+            </div>
+          </dl>
           {card.criteria.map((v) => (
             <article key={v.criterion_id}>
               <h4>

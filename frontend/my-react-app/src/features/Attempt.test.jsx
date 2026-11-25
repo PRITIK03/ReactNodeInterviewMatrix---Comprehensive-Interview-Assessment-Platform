@@ -64,3 +64,18 @@ it("displays the stored score after recovery and locks the form", async () => {
   expect(host.textContent).toContain("0 / 1");
   expect(host.querySelector("form")).toBeNull();
 });
+
+it("uses the server clock even when the browser clock is ahead", async () => {
+  const serverNow = Math.floor(Date.now() / 1000) - 3600;
+  await act(async () =>
+    root.render(
+      <Attempt
+        item={{ ...item, server_now: serverNow, expires: serverNow + 45 }}
+      />,
+    ),
+  );
+  expect(host.querySelector("input[type=radio]").disabled).toBe(false);
+  expect(
+    host.querySelector(".time-left[data-urgent=true] time").textContent,
+  ).toBe("0:45");
+});

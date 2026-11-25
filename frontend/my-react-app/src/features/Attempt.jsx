@@ -1,13 +1,14 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { api, date } from "./client";
-import { Status, Score, Form, Panel } from "./ui";
+import { Status, Score, Form } from "./ui";
 import CodeDiscussion from "./CodeDiscussion";
 const Editor = lazy(() => import("./PythonEditor"));
 export default function Attempt({ item: a, refresh, leave }) {
   const cacheKey = "matrix-draft/" + a.id + "/" + a.version;
+  const [initialTime] = useState(() => a.server_now ?? Date.now() / 1000);
   const [values, set] = useState(() => {
       try {
-        return a.status === "open" && a.expires > Date.now() / 1000
+        return a.status === "open" && a.expires > initialTime
           ? {
               ...a.answers,
               ...JSON.parse(sessionStorage.getItem(cacheKey) || "{}"),
@@ -19,14 +20,38 @@ export default function Attempt({ item: a, refresh, leave }) {
     }),
     [index, select] = useState(0),
     [notice, notify] = useState(""),
-    [clock, tick] = useState(Date.now() / 1000);
+    [clock, tick] = useState(initialTime);
   useEffect(() => {
-    const i = setInterval(() => tick(Date.now() / 1000), 1000);
-    return () => clearInterval(i);
-  }, []);
+    if (a.status !== "open") return;
+    let active = true;
+    let anchor = a.server_now ?? initialTime;
+    let sampled = performance.now();
+    const update = () => tick(anchor + (performance.now() - sampled) / 1000);
+    const timer = setInterval(update, 1000);
+    async function synchronize() {
+      if (document.visibilityState !== "visible") return;
+      try {
+        const snapshot = await api("/attempts/" + a.id + "/clock");
+        if (!active || !Number.isFinite(snapshot.server_now)) return;
+        anchor = snapshot.server_now;
+        sampled = performance.now();
+        update();
+        if (snapshot.status !== a.status) refresh();
+      } catch {
+        // Continue measuring elapsed time while offline; the server checks every write.
+      }
+    }
+    document.addEventListener("visibilitychange", synchronize);
+    return () => {
+      active = false;
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", synchronize);
+    };
+  }, [a.id, a.status, a.server_now, initialTime, refresh]);
   const q = a.questions[index],
     key = "/attempts/" + a.id,
     writable = a.status === "open" && a.expires > clock;
+  const seconds = Math.max(0, Math.ceil(a.expires - clock));
   const [savedQuestion, markSaved] = useState(null);
   const [advice, setAdvice] = useState(null);
   const pack = () =>
@@ -58,13 +83,13 @@ export default function Attempt({ item: a, refresh, leave }) {
     notify("Unsaved changes");
   };
   return (
-    <Panel
-      title={a.kind === "coding" ? "Python assessment" : "Aptitude assessment"}
-    >
+    <section aria-label="Assessment worksheet">
       <button className="quiet" onClick={leave}>
         ← Workspace
       </button>{" "}
-      <Status>{writable ? "in progress" : a.status}</Status>
+      <Status>
+        {writable ? "in progress" : a.status === "open" ? "expired" : a.status}
+      </Status>
       {a.feedback && (
         <article>
           <h3>Skill breakdown</h3>
@@ -134,15 +159,24 @@ export default function Attempt({ item: a, refresh, leave }) {
         </>
       ) : (
         <>
-          <p>
-            Deadline {date(a.expires)} ·{" "}
-            {Math.max(0, Math.ceil((a.expires - clock) / 60))} minutes remaining
-          </p>
-          <nav>
+          <div className="attempt-strip">
+            <span>
+              Question <strong>{index + 1}</strong> of {a.questions.length}
+            </span>
+            <span className="time-left" data-urgent={seconds <= 60}>
+              <time title={"Deadline " + date(a.expires)}>
+                {Math.floor(seconds / 60)}:
+                {String(seconds % 60).padStart(2, "0")}
+              </time>{" "}
+              remaining
+            </span>
+          </div>
+          <nav className="question-index" aria-label="Questions">
             {a.questions.map((x, i) => (
               <button
                 className={i === index ? "" : "quiet"}
                 key={x.id}
+                aria-current={i === index ? "step" : undefined}
                 onClick={() => select(i)}
               >
                 {i + 1}
@@ -154,7 +188,7 @@ export default function Attempt({ item: a, refresh, leave }) {
           <p>{q.description}</p>
           {q.options ? (
             q.options.map((opt) => (
-              <label key={opt} className="option">
+              <label key={opt} className="option answer-option">
                 <input
                   type="radio"
                   disabled={!writable}
@@ -225,6 +259,6 @@ export default function Attempt({ item: a, refresh, leave }) {
           saved={savedQuestion?.id === q.id ? savedQuestion : 0}
         />
       )}
-    </Panel>
+    </section>
   );
 }

@@ -125,6 +125,21 @@ def test_integrity_and_recovery(site):
             conn.execute(statement)
 
 
+def test_attempt_clock_is_private_and_reports_server_expiry(site):
+    candidate = site("clock-owner", "candidate")
+    other = site("clock-observer", "candidate")
+    path, attempt = assessment(candidate, "aptitude")
+    clock = candidate.get(P + path + "/clock").json()
+    assert abs(attempt["server_now"] - clock["server_now"]) <= 2
+    assert clock["expires"] == attempt["expires"] and clock["status"] == "open"
+    assert other.get(P + path + "/clock").status_code == 404
+    with db(True) as c:
+        c.execute(
+            "UPDATE assessment_attempt SET expires=0 WHERE id=?", (attempt["id"],)
+        )
+    assert candidate.get(P + path + "/clock").json()["status"] == "expired"
+
+
 def test_expired(site):
     c = site("candidate", "candidate")
     path, a = assessment(c, "aptitude")

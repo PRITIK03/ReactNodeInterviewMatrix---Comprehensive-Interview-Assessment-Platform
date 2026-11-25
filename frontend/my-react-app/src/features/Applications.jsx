@@ -2,7 +2,16 @@ import Evaluation from "./Evaluation";
 import { useResource } from "./useResource";
 import React, { useEffect, useState } from "react";
 import { api, date } from "./client";
-import { Status, Score, Form, Field, Feedback, Panel, Table } from "./ui";
+import {
+  Status,
+  Score,
+  Form,
+  Field,
+  Feedback,
+  Panel,
+  Table,
+  Pager,
+} from "./ui";
 
 function Resume({ row, admin, revision, reload }) {
   const r = useResource("/resumes/" + row.id, revision),
@@ -152,6 +161,7 @@ export default function Applications({
       <Feedback resource={rows} />
       {rows.data && (
         <Table
+          empty="No applications match this stage."
           headers={["Candidate", "Job", "Stage", "Application"]}
           rows={rows.data.map((r) => [
             r.id,
@@ -169,15 +179,7 @@ export default function Applications({
           ])}
         />
       )}
-      <button disabled={!offset} onClick={() => page(offset - 50)}>
-        Previous
-      </button>{" "}
-      <button
-        disabled={rows.data?.length !== 50}
-        onClick={() => page(offset + 50)}
-      >
-        Next
-      </button>
+      <Pager offset={offset} onPage={page} count={rows.data?.length} />
       {id && (
         <>
           <Feedback resource={item} />

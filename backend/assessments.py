@@ -149,6 +149,17 @@ def history(
         return [{**dict(r), "status": state(r)} for r in rows]
 
 
+@router.get("/attempts/{key}/clock")
+def attempt_clock(key: str, user=Depends(candidate_user)):
+    with db() as c:
+        attempt = owned(c, key, user)
+        return {
+            "server_now": now(),
+            "expires": attempt["expires"],
+            "status": state(attempt),
+        }
+
+
 @router.get("/attempts/{key}")
 def detail(key: str, user=Depends(candidate_user)):
     with db() as c:
@@ -184,6 +195,7 @@ def detail(key: str, user=Depends(candidate_user)):
         return {
             **dict(a),
             "status": state(a),
+            "server_now": now(),
             "questions": items,
             "answers": saved,
             "case_results": cases,

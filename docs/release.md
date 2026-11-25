@@ -10,6 +10,21 @@ Use the Windows bootstrap in the [README](../README.md). SQLite, private objects
 4. In the recruiter application, generate a **combined** scorecard using **Published evidence rules**. Open the Python source excerpt and the assessment record. Accept one criterion, override the other with a reason, then record the reviewer disposition. Compare the proposed and reviewed scores and open the review history.
 5. To rehearse the complete running stack with fresh synthetic accounts, run `python scripts/verify_live.py` using the project’s test virtual environment. The rehearsal removes its synthetic document at the end. Its synthetic accounts and job remain in the local demo database.
 
+## Workspace design contract and audit
+
+The candidate and recruiter workspaces share a horizontal index. The practice library uses an answer sheet and Python source listing as recognizable track covers. Reading views use Instrument Serif for display and locally served Instrument Sans for controls and body text. Recruitment tables, review ledgers and question navigation use compact rows. Forms expand when needed.
+
+| Review | Applied decision and verification |
+| --- | --- |
+| Visual identity | Flat paper and ink surfaces, vermilion actions, ochre aptitude and green coding covers. Logo files and fonts resolve locally. |
+| Hierarchy and density | One level of covers in the library. Hairlines separate sections, criteria, citations and history. Empty tables omit their headers, and short lists omit pagination. |
+| Typography | The font assets ship in the build. Form labels stay visible while filled. Time and scoring remain readable at narrow widths. |
+| Color | The paired body, muted, primary-action and status text colors each exceed 6:1 against their intended surfaces. Text, symbols and labels communicate state alongside color. These measurements cover the specified pairs. |
+| Real states | An unauthorized session opens sign-in. An unavailable workspace offers retry. The library distinguishes loading, empty and available tracks. Disabled actions, saved replies and expiring attempts have distinct states. |
+| Motion and input | Short transitions respond to selecting a section or hovering a cover. Reduced-motion mode removes animations and transitions. A skip link, focus outlines and native inputs support keyboard navigation. |
+
+The attempt API returns server time alongside its deadline. The worksheet measures elapsed time locally and checks the private attempt clock when a background tab returns. The server validates every deadline-sensitive write. After an ambiguous start response, retrying the same selection within the workspace reuses its request key.
+
 ## API and operations
 
 | Operation | Route under `/api/v1` | Authority |

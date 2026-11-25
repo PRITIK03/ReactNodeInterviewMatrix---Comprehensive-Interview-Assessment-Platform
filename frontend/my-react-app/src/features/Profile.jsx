@@ -21,7 +21,6 @@ export default function Profile({ user, revision, reload, overview }) {
       <Feedback resource={profile} />
       {profile.data && (
         <section className="identity">
-          <div className="identity-cover" aria-hidden="true" />
           <div className="identity-content">
             <div className="identity-actions">
               <span className="avatar" aria-hidden="true">

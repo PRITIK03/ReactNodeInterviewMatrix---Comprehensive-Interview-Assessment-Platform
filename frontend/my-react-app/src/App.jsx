@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { api, date, displayName } from "./features/client";
 import {
+  Pager,
   Panel,
   Form,
   Field,
@@ -28,9 +29,8 @@ import {
   FolderOpen,
   LibraryBig,
   LogOut,
-  Layers,
+  ListChecks,
   History,
-  PanelsTopLeft,
 } from "lucide-react";
 import "./workspace.css";
 
@@ -85,6 +85,7 @@ function InvitationList({ start, revision }) {
       <Feedback resource={rows} />
       {rows.data && (
         <Table
+          empty="No assessment invitations on this page."
           headers={["Role", "Organization", "Expires", "State", "Assessment"]}
           rows={rows.data.map((i) => [
             i.id,
@@ -102,15 +103,7 @@ function InvitationList({ start, revision }) {
           ])}
         />
       )}
-      <button disabled={!offset} onClick={() => page(offset - 50)}>
-        Previous
-      </button>{" "}
-      <button
-        disabled={rows.data?.length !== 50}
-        onClick={() => page(offset + 50)}
-      >
-        Next
-      </button>
+      <Pager offset={offset} onPage={page} count={rows.data?.length} />
     </Panel>
   );
 }
@@ -130,7 +123,7 @@ function Brand() {
   return (
     <span className="brand">
       <span className="brand-mark">
-        <Layers size={21} />
+        <ListChecks size={22} strokeWidth={2.2} />
       </span>
       InterviewMatrix
     </span>
@@ -152,7 +145,9 @@ function Workspace({ user, signout }) {
     [err, fail] = useState(""),
     [offset, page] = useState(0);
   const [starting, setStarting] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const pending = useRef(false);
+  const startKeys = useRef(new Map());
   const reload = useCallback(() => bump((x) => x + 1), []);
   const versions = useResource(
       admin ? "/assessments" : "/assessments?current_only=true",
@@ -170,12 +165,16 @@ function Workspace({ user, signout }) {
     if (pending.current) return;
     pending.current = true;
     setStarting(true);
+    const target = JSON.stringify([version, invitation]);
+    if (!startKeys.current.has(target))
+      startKeys.current.set(target, crypto.randomUUID());
     try {
       const r = await api("/attempts", "POST", {
         version,
         invitation,
-        request_key: crypto.randomUUID(),
+        request_key: startKeys.current.get(target),
       });
+      startKeys.current.delete(target);
       openAttempt(r.id);
       fail("");
     } catch (e) {
@@ -186,17 +185,60 @@ function Workspace({ user, signout }) {
     }
   }
   const pageTitle =
-    tab === "Assessments" ? (id ? "Assessment" : "Practice library") : tab;
+    tab === "Assessments"
+      ? id
+        ? attempt.data
+          ? attempt.data.kind === "coding"
+            ? "Python assessment"
+            : "Aptitude assessment"
+          : "Assessment"
+        : "Practice library"
+      : tab;
   return (
     <div className="shell">
-      <aside className="sidebar">
-        <Brand />
-        <nav aria-label="Workspace">
+      <a
+        className="skip-link"
+        href="#workspace"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById("workspace")?.focus();
+        }}
+      >
+        Skip to workspace
+      </a>
+      <header className="masthead">
+        <div className="mast-inner">
+          <Brand />
+          <span className="workspace-name">
+            {admin
+              ? overview.data?.name || "Recruiter workspace"
+              : "Candidate workspace"}
+          </span>
+          <button
+            className="signout"
+            disabled={leaving}
+            onClick={async () => {
+              setLeaving(true);
+              try {
+                await signout();
+              } catch {
+                fail(
+                  "Sign-out could not be confirmed. Check your connection and try again.",
+                );
+                setLeaving(false);
+              }
+            }}
+          >
+            <LogOut size={16} />
+            {leaving ? "Signing out…" : "Sign out"}
+          </button>
+        </div>
+        <nav className="index-nav" aria-label="Workspace">
           {tabs.map((t) => {
             const Icon = navigation[t];
             return (
               <button
-                className="nav-item"
+                className="index-link"
                 key={t}
                 aria-current={tab === t ? "page" : undefined}
                 onClick={() => {
@@ -204,29 +246,23 @@ function Workspace({ user, signout }) {
                   fail("");
                 }}
               >
-                <Icon size={19} />
+                <Icon size={16} />
                 {t === "Assessments" ? "Practice library" : t}
               </button>
             );
           })}
         </nav>
-        <button className="nav-item signout" onClick={signout}>
-          <LogOut size={18} />
-          Sign out
-        </button>
-      </aside>
+      </header>
       <div className="canvas">
-        <header className="workspace-bar">
-          <span>
-            <PanelsTopLeft size={16} />
-            {admin
-              ? overview.data?.name || "Recruiter workspace"
-              : "Candidate workspace"}
-          </span>
-          <span className="account-email">{user.email}</span>
-        </header>
-        <main id="workspace">
-          <h1>{pageTitle}</h1>
+        <main id="workspace" tabIndex={-1} data-area={tab.toLowerCase()}>
+          <header className="page-heading">
+            <h1>{pageTitle}</h1>
+            {tab === "Assessments" && !id && versions.data?.length > 0 && (
+              <p className="catalog-size">
+                <strong>{versions.data.length}</strong> practice assessments
+              </p>
+            )}
+          </header>
           {err && <p role="alert">{err}</p>}
           {admin && tab === "Jobs" && overview.data && (
             <div className="metrics">
@@ -286,7 +322,7 @@ function Workspace({ user, signout }) {
           {tab === "Assessments" &&
             (id ? (
               <>
-                <Feedback resource={attempt} />
+                <Feedback resource={attempt} loading="Opening assessment…" />
                 {attempt.data && (
                   <Attempt
                     key={id}
@@ -312,7 +348,10 @@ function Workspace({ user, signout }) {
                   <h2>
                     <History size={21} /> Your attempts
                   </h2>
-                  <Feedback resource={history} />
+                  <Feedback
+                    resource={history}
+                    loading="Loading your attempts…"
+                  />
                   {history.data &&
                     (history.data.length ? (
                       <Table
@@ -349,22 +388,11 @@ function Workspace({ user, signout }) {
                           : "You haven’t started an assessment yet."}
                       </p>
                     ))}
-                  {(offset > 0 || history.data?.length === 50) && (
-                    <div className="pager">
-                      <button
-                        disabled={!offset}
-                        onClick={() => page(offset - 50)}
-                      >
-                        Previous
-                      </button>
-                      <button
-                        disabled={history.data?.length !== 50}
-                        onClick={() => page(offset + 50)}
-                      >
-                        Next
-                      </button>
-                    </div>
-                  )}
+                  <Pager
+                    offset={offset}
+                    onPage={page}
+                    count={history.data?.length}
+                  />
                 </section>
               </>
             ))}
@@ -396,11 +424,13 @@ export default function App() {
   return (
     <main className="entry">
       <Brand />
-      {session.error ? (
-        <Login done={() => bump((x) => x + 1)} />
-      ) : (
-        <Feedback resource={session} />
-      )}
+      <div className="entry-sheet">
+        {session.status === 401 ? (
+          <Login done={() => bump((x) => x + 1)} />
+        ) : (
+          <Feedback resource={session} loading="Opening workspace…" />
+        )}
+      </div>
     </main>
   );
 }
