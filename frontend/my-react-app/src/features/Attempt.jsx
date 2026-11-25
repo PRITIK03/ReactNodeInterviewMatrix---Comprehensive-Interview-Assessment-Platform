@@ -1,6 +1,7 @@
 import React, { lazy, Suspense, useEffect, useState } from "react";
 import { api, date } from "./client";
 import { Status, Score, Form, Panel } from "./ui";
+import CodeDiscussion from "./CodeDiscussion";
 const Editor = lazy(() => import("./PythonEditor"));
 export default function Attempt({ item: a, refresh, leave }) {
   const cacheKey = "matrix-draft/" + a.id + "/" + a.version;
@@ -26,6 +27,7 @@ export default function Attempt({ item: a, refresh, leave }) {
   const q = a.questions[index],
     key = "/attempts/" + a.id,
     writable = a.status === "open" && a.expires > clock;
+  const [savedQuestion, markSaved] = useState(null);
   const [advice, setAdvice] = useState(null);
   const pack = () =>
     Object.entries(values)
@@ -46,6 +48,7 @@ export default function Attempt({ item: a, refresh, leave }) {
         replace_snapshot: true,
       });
       notify("Draft saved on server");
+      if (a.kind === "coding" && values[q.id]?.trim()) markSaved({ id: q.id });
     } catch {
       notify("Server unavailable. Draft retained in this tab.");
     }
@@ -106,6 +109,21 @@ export default function Attempt({ item: a, refresh, leave }) {
             Server-graded against assessment version{" "}
             <code>{a.version.slice(0, 12)}</code>.
           </p>
+          {a.kind === "coding" && (
+            <label>
+              Solution to discuss
+              <select
+                value={index}
+                onChange={(e) => select(Number(e.target.value))}
+              >
+                {a.questions.map((item, i) => (
+                  <option value={i} key={item.id}>
+                    {i + 1}. {item.prompt}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           {a.case_results.map((r, i) => (
             <p key={i}>
               Question {a.questions.findIndex((q) => q.id === r.question) + 1} ·{" "}
@@ -196,6 +214,16 @@ export default function Attempt({ item: a, refresh, leave }) {
             </Form>
           )}
         </>
+      )}
+      {a.kind === "coding" && (writable || a.status === "complete") && (
+        <CodeDiscussion
+          key={a.id + "/" + q.id}
+          attempt={a.id}
+          question={q.id}
+          source={a.status === "complete" ? a.answers[q.id] : values[q.id]}
+          completed={a.status === "complete"}
+          saved={savedQuestion?.id === q.id ? savedQuestion : 0}
+        />
       )}
     </Panel>
   );

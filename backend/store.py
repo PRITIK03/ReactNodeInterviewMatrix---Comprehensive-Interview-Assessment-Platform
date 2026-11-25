@@ -69,6 +69,11 @@ CREATE TABLE IF NOT EXISTS assessment_question(version TEXT REFERENCES assessmen
 CREATE TABLE IF NOT EXISTS invitation(id TEXT PRIMARY KEY,application TEXT REFERENCES application,version TEXT REFERENCES assessment_version,token TEXT UNIQUE,expires INTEGER,accepted INTEGER);
 CREATE TABLE IF NOT EXISTS assessment_attempt(id TEXT PRIMARY KEY,owner TEXT REFERENCES account,version TEXT REFERENCES assessment_version,invitation TEXT UNIQUE REFERENCES invitation,request_key TEXT,started INTEGER,expires INTEGER,status TEXT,submitted INTEGER,score INTEGER,total INTEGER,UNIQUE(owner,request_key));
 CREATE TABLE IF NOT EXISTS answer(attempt TEXT REFERENCES assessment_attempt,question TEXT REFERENCES question_version,value TEXT,PRIMARY KEY(attempt,question));
+CREATE TABLE IF NOT EXISTS code_followup(
+    attempt TEXT REFERENCES assessment_attempt ON DELETE CASCADE,question TEXT REFERENCES question_version,
+    turn INTEGER NOT NULL CHECK(turn BETWEEN 1 AND 4),source_hash TEXT NOT NULL,line INTEGER NOT NULL,
+    excerpt TEXT NOT NULL,prompt TEXT NOT NULL,provider TEXT NOT NULL,reply TEXT,created INTEGER NOT NULL,answered INTEGER,
+    PRIMARY KEY(attempt,question,turn));
 CREATE TABLE IF NOT EXISTS grading_lease(attempt TEXT PRIMARY KEY REFERENCES assessment_attempt,nonce TEXT,expires INTEGER);
 CREATE TABLE IF NOT EXISTS code_submission(id TEXT PRIMARY KEY,attempt TEXT REFERENCES assessment_attempt,question TEXT REFERENCES question_version,source TEXT,UNIQUE(attempt,question));
 CREATE TABLE IF NOT EXISTS execution_run(id TEXT PRIMARY KEY,submission TEXT REFERENCES code_submission,engine TEXT,at INTEGER);

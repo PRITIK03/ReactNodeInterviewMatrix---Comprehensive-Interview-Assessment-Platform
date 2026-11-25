@@ -11,7 +11,15 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
-from . import access, advice, assessments, documents, workspace, evaluation_api
+from . import (
+    access,
+    advice,
+    assessments,
+    documents,
+    workspace,
+    evaluation_api,
+    followups,
+)
 from .store import initialize, db, uid, now
 
 
@@ -93,7 +101,15 @@ async def observe(request: Request, call_next):
     return response
 
 
-for module in (access, assessments, workspace, documents, advice, evaluation_api):
+for module in (
+    access,
+    assessments,
+    workspace,
+    documents,
+    advice,
+    evaluation_api,
+    followups,
+):
     app.include_router(module.router, prefix="/api/v1")
 
 

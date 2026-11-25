@@ -16,11 +16,18 @@ const attempt = {
     },
   ],
 };
-async function openEditor(page) {
+async function openEditor(page, discussionHandler) {
   await page.route("**/api/v1/**", async (route) => {
     const path = new URL(route.request().url()).pathname.split("/api/v1")[1];
+    if (discussionHandler && path.includes("/follow-ups"))
+      return discussionHandler(route, path);
     const response = {
       "/me": { role: "candidate", email: "demo@example.org" },
+      "/attempts/sample-attempt/questions/q1/follow-ups": {
+        turns: [],
+        limit: 4,
+        gemini_available: false,
+      },
       "/assessments": [],
       "/overview": { name: "Candidate", metrics: {} },
       "/attempts": [{ ...attempt, company: "Practice", started: 1 }],
@@ -105,4 +112,94 @@ test("continuation and terminal statements use the configured indent width", asy
   await k.press("Enter");
   await k.type("1,");
   await expect.poll(() => value(page)).toContain("v = [\n  1,");
+});
+
+test("Enter moves directly inside a for loop and a nested if", async ({
+  page,
+}) => {
+  await openEditor(page);
+  const k = page.keyboard;
+  await k.type("for item in items:");
+  await k.press("Enter");
+  await k.type("if item:");
+  await k.press("Enter");
+  await k.type("print");
+  await expect
+    .poll(() => value(page))
+    .toBe("for item in items:\n    if item:\n        print");
+});
+
+test("Enter indents the body after a multiline Python header", async ({
+  page,
+}) => {
+  await openEditor(page);
+  const header = "if (\n    ready and available\n):";
+  await page.evaluate((text) => navigator.clipboard.writeText(text), header);
+  await page.keyboard.press("ControlOrMeta+v");
+  await page.keyboard.press("Enter");
+  await page.keyboard.type("start");
+  await expect.poll(() => value(page)).toBe(header + "\n    start");
+});
+
+test("saved code starts a discussion, speech is editable and the confirmed reply survives reload", async ({
+  page,
+}) => {
+  const turns = [];
+  const saved = [];
+  await page.addInitScript(() => {
+    window.SpeechRecognition = class {
+      start() {
+        window.emitSpeech = (words, final) => {
+          const segment = [{ transcript: words }];
+          segment.isFinal = final;
+          this.onresult({ results: [segment] });
+        };
+      }
+      stop() {
+        this.onend();
+      }
+      abort() {
+        this.onend();
+      }
+    };
+  });
+  await openEditor(page, async (route) => {
+    const method = route.request().method();
+    if (method === "GET")
+      return route.fulfill({
+        json: { turns, limit: 4, gemini_available: false },
+      });
+    if (method === "POST") {
+      turns.push({
+        turn: 1,
+        line: 1,
+        excerpt: "total = 0",
+        prompt: "What does total represent?",
+        provider: "local",
+        reply: null,
+      });
+      return route.fulfill({ json: turns[0] });
+    }
+    saved.push(route.request().postDataJSON());
+    turns[0].reply = saved[0].text;
+    return route.fulfill({ json: { turn: 1, reply: turns[0].reply } });
+  });
+  await page.keyboard.type("total = 0");
+  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  await expect(page.getByText("What does total represent?")).toBeVisible();
+  const box = page.getByLabel("Your explanation");
+  await box.fill("My reasoning.");
+  await page.getByRole("button", { name: "Dictate answer" }).click();
+  await page.evaluate(() => window.emitSpeech("a sum", false));
+  await expect(page.getByText("a sum", { exact: true })).toBeVisible();
+  await page.evaluate(() => window.emitSpeech("It tracks a sum.", true));
+  await page.getByRole("button", { name: "Stop dictation" }).click();
+  await expect(box).toHaveValue("My reasoning. It tracks a sum.");
+  expect(saved).toHaveLength(0);
+  await box.fill("It tracks the cumulative sum.");
+  await page.getByRole("button", { name: "Save explanation" }).click();
+  await page.reload();
+  await page.getByRole("button", { name: "Open", exact: true }).click();
+  await expect(page.getByText("It tracks the cumulative sum.")).toBeVisible();
+  expect(saved).toEqual([{ text: "It tracks the cumulative sum." }]);
 });

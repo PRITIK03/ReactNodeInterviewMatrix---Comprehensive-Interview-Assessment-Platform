@@ -427,6 +427,10 @@ def remove(key: str, user=Depends(actor)):
 def retention():
     with db(True) as c:
         c.execute("DELETE FROM evaluation WHERE expires<=?", (now(),))
+        c.execute(
+            "DELETE FROM code_followup WHERE attempt IN (SELECT id FROM assessment_attempt WHERE started<=?)",
+            (now() - 90 * 86400,),
+        )
         c.execute("DELETE FROM provider_call WHERE at<?", (now() - 90 * 86400,))
     with db() as c:
         keys = [

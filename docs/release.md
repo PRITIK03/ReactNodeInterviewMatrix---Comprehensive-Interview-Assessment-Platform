@@ -17,6 +17,7 @@ Use the Windows bootstrap in the [README](../README.md). SQLite, private objects
 | Publish rubric revision | `POST /jobs/{job}/versions` | Owning organization |
 | Allow or withdraw external evaluation | `PUT /applications/{id}/evaluation-permission` | Owning candidate |
 | List or generate scorecards | `GET/POST /applications/{id}/evaluations` | Owning recruiter |
+| Discuss one Python solution | `GET/POST /attempts/{attempt}/questions/{question}/follow-ups`, `PUT .../follow-ups/{turn}` | Owning candidate |
 | Resolve a scorecard and citations | `GET /evaluations/{id}` | Owning recruiter |
 | Append a review event | `POST /evaluations/{id}/review` | Owning recruiter and matching revision |
 | Inspect operational summaries | `GET /operations` | Recruiter, tenant-scoped results and shared worker heartbeat |
@@ -75,12 +76,14 @@ See the [evaluation and readiness architecture](architecture/evaluation-and-read
 
 | Check | Local result |
 | --- | --- |
-| Backend and API | 27 tests passed on SQLite. The PostgreSQL-only import case was skipped. All 28 passed using a disposable PostgreSQL instance, including the migration and overwrite-refusal test. |
+| Backend and API | 30 tests passed on SQLite. The PostgreSQL-only import case was skipped. The original 28 tests passed using a disposable PostgreSQL instance, including the migration and overwrite-refusal test. |
 | Evaluation quality | Golden schema and arithmetic cases passed. All seven deliberately invalid model responses were rejected. A provider failure produced zero additional scorecards. The human-agreement metric is unavailable without independent labels. |
-| Frontend | Nine component and audio-controller tests passed. Three Chromium browser tests passed on Monaco typing, indentation, undo/redo, paste, resizing, draft recovery and local audio playback. |
+| Frontend | Twelve component and audio-controller tests passed. Six Chromium browser tests passed on Monaco typing, indentation, undo/redo, paste, resizing, draft recovery, code discussions with editable dictation and local audio playback. Speech recognition events were simulated for repeatability. |
 | Integrated demo | The rehearsal used real private S3-compatible storage, the OS scanner, Celery, the parser, the assigned assessment and a human-reviewed scorecard. Original document deletion completed. |
 | Build and dependency checks | Vite production build and ESLint passed. npm audit and pip-audit reported no known advisories in the checked frontend tree and backend dependency resolution. Monaco remains a large lazy-loaded bundle. |
 | Repository | Six repository-safeguard tests passed. Historical inspection found one reachable environment blob matching a provider credential signature. Credential rotation must be confirmed with the provider. |
 | Deployment | The seven-service Compose file validated against the Compose specification. Local verification used native processes. Check the GitHub Actions run for the pushed commit for the Linux container result. |
+
+The [code follow-up walkthrough](../README.md#demo-a-code-follow-up) uses the local question generator for a key-free presentation. For a Gemini presentation, configure a fresh provider key and rehearse with the intended microphone and browser.
 
 A passing fixture does not measure a model’s performance on real hiring data. The release needs human review of real-world rubric relevance, privacy policy and operating controls before consequential use.

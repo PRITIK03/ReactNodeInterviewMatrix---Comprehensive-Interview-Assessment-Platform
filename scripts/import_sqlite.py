@@ -33,6 +33,7 @@ ORDER = (
     "execution_run",
     "test_case_result",
     "coaching",
+    "code_followup",
     "resume",
     "correction",
     "processing_event",

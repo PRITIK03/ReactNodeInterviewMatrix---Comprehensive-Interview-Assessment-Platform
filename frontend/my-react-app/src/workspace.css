@@ -256,3 +256,11 @@ button:hover:enabled {
     overflow-wrap: anywhere;
   }
 }
+
+.code-discussion { margin-block: 1.5rem; }
+.code-discussion h4 { margin: .65rem 0; font-size: 1rem; }
+.code-turn { border-inline-start: 3px solid #537a70; padding-inline-start: 1rem; margin-block: 1rem; }
+.code-turn pre { overflow: auto; }
+.code-turn .explanation { white-space: pre-wrap; overflow-wrap: anywhere; }
+.spoken-answer textarea { width: 100%; box-sizing: border-box; resize: vertical; }
+.spoken-answer .row { margin-block-start: .75rem; }

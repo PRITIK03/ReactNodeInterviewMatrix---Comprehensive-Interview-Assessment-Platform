@@ -7,6 +7,11 @@ export function pythonRules(actions) {
       action: { indentAction: actions.Indent },
     },
     {
+      // A continued Python header can finish on a line containing just "):".
+      beforeText: /^\s*[)\]}]+:\s*(?:#.*)?$/,
+      action: { indentAction: actions.Indent },
+    },
+    {
       beforeText: /^.*[[({]\s*$/,
       afterText: /^\s*[\])}]/,
       action: { indentAction: actions.IndentOutdent },

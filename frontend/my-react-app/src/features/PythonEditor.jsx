@@ -101,7 +101,10 @@ export default function PythonEditor({ initial, onChange, onSave }) {
         </label>
       </div>
       <div className="editor" ref={host} />
-      <small>Ctrl/Cmd+S saves a draft. Ctrl+M toggles Tab navigation.</small>
+      <small>
+        Enter indents Python blocks automatically. Ctrl/Cmd+S saves a draft.
+        Ctrl+M toggles Tab navigation.
+      </small>
     </>
   );
 }

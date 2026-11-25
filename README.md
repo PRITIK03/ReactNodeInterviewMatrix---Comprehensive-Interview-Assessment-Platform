@@ -42,6 +42,14 @@ Each coding test receives a fresh pinned CPython/WASI image. The host grants std
 
 A remote Judge0-compatible service is an option when assessments need multiple languages or independent execution hosts. This local implementation uses Wasmtime to avoid a Docker or database service installation and keep submissions on the machine. Only the included Python/WASI environment is supported. Optional Gemini coaching sends the candidate’s first submitted solution after an explicit request and consent. Its structured response is separate from every score.
 
+## Demo a code follow-up
+
+Open a Python assessment and type `for item in items:`, press Enter, type `if item:` and press Enter again. Monaco places the cursor four spaces deeper for each block by default. The indent-width control also supports two or eight spaces.
+
+Save the draft or choose **Ask about my code**. The discussion cites a line from the saved solution. Answer in the text box or select **Dictate answer**, speak, stop and edit the transcript. **Save explanation** confirms the text. Reopen the attempt to see the response and ask a different question. Each solution supports four questions. The conversation is optional and independent of timed grading.
+
+Local practice questions work without a key. For model-generated questions, configure `MATRIX_REVIEW_MODEL` and `MATRIX_REVIEW_KEY` in the backend process and select **Use Gemini** before requesting the question. This sends identifiers, operators and line numbers from selected statements. Comments, literals, spoken audio and explanations are excluded from the model request. The browser may use its own remote speech service after the candidate starts dictation. Microphone dictation needs browser support and HTTPS or localhost. Typing works independently. [Browser speech recognition support](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)
+
 ## Resume evidence and deletion
 
 Uploads accept PDF and DOCX up to 5 MiB. The service checks the MIME, extension, signature or archive structure, limits decompression and pages, and generates a storage key. Duplicate content within one application reuses the document. The Celery task checks the checksum, runs malware scanning and starts a time-limited parser. PyMuPDF extracts native PDF text. python-docx extracts paragraphs and table cells. English Tesseract runs locally on PDF pages with sparse text. The default resume pipeline sends no content to external AI providers.
