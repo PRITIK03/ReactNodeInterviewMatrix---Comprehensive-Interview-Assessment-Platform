@@ -61,7 +61,7 @@ def local_case(source, stdin):
             return {
                 "status": "time_limit",
                 "stdout": "",
-                "engine": "cp312-wasmtime51-wasip1-v1/wall",
+                "engine": "cp312-wasmtime51-wasip1-v2/wall",
             }
     finally:
         slots.release()

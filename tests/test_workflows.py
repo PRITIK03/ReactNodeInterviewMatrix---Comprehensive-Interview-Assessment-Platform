@@ -159,6 +159,13 @@ def test_runner_limits(source, status):
     assert run_case(source, "")["status"] == status
 
 
+def test_runner_output_is_bounded():
+    result = run_case("print('x'*40000)", "")
+    assert (
+        result["status"] == "output_limit" and len(result["stdout"].encode()) <= 16384
+    )
+
+
 def test_guest_capabilities():
     result = run_case(
         "import os\nprint(os.environ.get('MATRIX_DB'))\ntry:\n open('/host.txt','w')\nexcept OSError: print('no-file')\ntry:\n import socket\n socket.socket()\nexcept (ImportError,OSError,AttributeError): print('no-network')",
