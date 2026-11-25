@@ -2,12 +2,12 @@ def generate_aptitude_feedback(answers, questions):
     section_correct = {}
     section_total = {}
     for a, q in zip(answers, questions):
-        section = q.get('category') or q.get('section')
+        section = q.get("category") or q.get("section")
         if not section:
             continue
         section = section.lower()
         section_total[section] = section_total.get(section, 0) + 1
-        if a == q['answer']:
+        if a == q["answer"]:
             section_correct[section] = section_correct.get(section, 0) + 1
 
     section_scores = {}
@@ -32,13 +32,17 @@ def generate_aptitude_feedback(answers, questions):
         if sec in tips:
             recommendations.append(tips[sec])
         else:
-            recommendations.append(f"Review and practice more {sec} questions to improve your skills.")
+            recommendations.append(
+                f"Review and practice more {sec} questions to improve your skills."
+            )
 
     if section_scores:
         max_score = max(section_scores.values())
         min_score = min(section_scores.values())
         best = [sec.capitalize() for sec, s in section_scores.items() if s == max_score]
-        worst = [sec.capitalize() for sec, s in section_scores.items() if s == min_score]
+        worst = [
+            sec.capitalize() for sec, s in section_scores.items() if s == min_score
+        ]
         best_str = ", ".join(best)
         worst_str = ", ".join(worst)
         summary = (
@@ -52,5 +56,5 @@ def generate_aptitude_feedback(answers, questions):
         "section_scores": section_scores,
         "weak_sections": weak_sections,
         "recommendations": recommendations,
-        "summary": summary
+        "summary": summary,
     }

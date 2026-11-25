@@ -1,0 +1,78 @@
+name: interviewmatrix
+x-app: &app
+  DATABASE_URL: postgresql:///interviewmatrix
+  PGDATABASE: interviewmatrix
+  PGHOST: postgres
+  PGUSER: matrix
+  PGPASSWORD: ${MATRIX_PG_PASSWORD:?supply a private database password}
+  REDIS_URL: redis://redis:6379/0
+  S3_ENDPOINT: ${S3_ENDPOINT:?supply a private S3 endpoint}
+  S3_BUCKET: ${S3_BUCKET:?supply an existing private bucket name}
+  AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID:?supply S3 service credentials}
+  AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY:?supply S3 service credentials}
+  AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION:-us-east-1}
+services:
+  web:
+    build: {context: ., dockerfile: deploy/Dockerfile, target: web}
+    ports: ["127.0.0.1:8080:8080"]
+    depends_on: [api]
+    networks: [web]
+  postgres:
+    image: postgres:18-bookworm
+    environment:
+      POSTGRES_DB: interviewmatrix
+      POSTGRES_USER: matrix
+      POSTGRES_PASSWORD: ${MATRIX_PG_PASSWORD:?}
+    volumes: [pgdata:/var/lib/postgresql]
+    healthcheck: {test: ["CMD","pg_isready","-U","matrix","-d","interviewmatrix"], interval: 5s, timeout: 3s, retries: 20}
+    networks: [data]
+  redis:
+    image: redis:8-alpine
+    command: ["redis-server","--appendonly","yes"]
+    volumes: [redisdata:/data]
+    networks: [data]
+  api:
+    build: {context: ., dockerfile: deploy/Dockerfile, target: api}
+    environment:
+      <<: *app
+      MATRIX_HOSTS: ${MATRIX_HOSTS:-localhost,127.0.0.1}
+      MATRIX_PUBLIC_ORIGIN: ${MATRIX_PUBLIC_ORIGIN:-}
+      MATRIX_RUNNER_ENDPOINT: http://runner:8001/case
+      MATRIX_RUNNER_TOKEN: ${MATRIX_RUNNER_TOKEN:?generate a random token of at least 32 characters}
+      MATRIX_REVIEW_KEY: ${MATRIX_REVIEW_KEY:-}
+      MATRIX_REVIEW_MODEL: ${MATRIX_REVIEW_MODEL:-}
+      MATRIX_INPUT_USD_PER_M: ${MATRIX_INPUT_USD_PER_M:-}
+      MATRIX_OUTPUT_USD_PER_M: ${MATRIX_OUTPUT_USD_PER_M:-}
+    depends_on:
+      postgres: {condition: service_healthy}
+      redis: {condition: service_started}
+      runner: {condition: service_started}
+    healthcheck: {test: ["CMD","python","-c","import urllib.request; urllib.request.urlopen('http://localhost:8000/api/health',timeout=2)"], interval: 10s, timeout: 5s, retries: 12}
+    networks: [web,data,execution,external]
+  worker:
+    build: {context: ., dockerfile: deploy/Dockerfile, target: worker}
+    environment:
+      <<: *app
+      CLAMD_HOST: ${CLAMD_HOST:?supply a private ClamAV host}
+      CLAMD_PORT: ${CLAMD_PORT:-3310}
+    depends_on: {api: {condition: service_healthy}}
+    networks: [data,external]
+  scheduler:
+    build: {context: ., dockerfile: deploy/Dockerfile, target: api}
+    command: ["celery","-A","backend.documents:celery","beat","-s","/app/runtime/beat","--loglevel=WARNING"]
+    environment: {REDIS_URL: "redis://redis:6379/0"}
+    depends_on: {api: {condition: service_healthy}}
+    networks: [data]
+  runner:
+    build: {context: ., dockerfile: deploy/Dockerfile, target: runner}
+    environment: {MATRIX_RUNNER_TOKEN: "${MATRIX_RUNNER_TOKEN:?}"}
+    read_only: true
+    tmpfs: ["/tmp:rw,noexec,nosuid,size=32m"]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    pids_limit: 128
+    mem_limit: 1g
+    cpus: 2
+    networks: [execution]
+volumes: {pgdata: {}, redisdata: {}}
+networks: {web: {}, data: {internal: true}, execution: {internal: true}, external: {}}

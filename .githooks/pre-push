@@ -1,0 +1,19 @@
+#!/bin/sh
+set -eu
+
+# Git supplies the actual push destination as the second argument, including
+# when a command uses a URL directly or a remote has a separate push URL.
+case "${2-}" in
+  https://github.com/PRITIK03/ReactNodeInterviewMatrix---Comprehensive-Interview-Assessment-Platform.git|\
+  https://github.com/PRITIK03/ReactNodeInterviewMatrix---Comprehensive-Interview-Assessment-Platform|\
+  git@github.com:PRITIK03/ReactNodeInterviewMatrix---Comprehensive-Interview-Assessment-Platform.git|\
+  git@github.com:PRITIK03/ReactNodeInterviewMatrix---Comprehensive-Interview-Assessment-Platform|\
+  ssh://git@github.com/PRITIK03/ReactNodeInterviewMatrix---Comprehensive-Interview-Assessment-Platform.git|\
+  ssh://git@github.com/PRITIK03/ReactNodeInterviewMatrix---Comprehensive-Interview-Assessment-Platform)
+    exit 0
+    ;;
+  *)
+    echo 'Push blocked: this clone may only push to the PRITIK03/ReactNodeInterviewMatrix---Comprehensive-Interview-Assessment-Platform repository.' >&2
+    exit 1
+    ;;
+esac

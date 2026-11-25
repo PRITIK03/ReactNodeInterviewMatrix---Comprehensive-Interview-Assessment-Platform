@@ -1,6 +1,6 @@
 {
-  "dependencies": {
-    "chart.js": "^4.4.9",
-    "react-chartjs-2": "^5.3.0"
+  "scripts": {
+    "check:repo": "node scripts/check-repo-safety.mjs",
+    "test:repo-safety": "node --test scripts/check-repo-safety.test.mjs"
   }
 }

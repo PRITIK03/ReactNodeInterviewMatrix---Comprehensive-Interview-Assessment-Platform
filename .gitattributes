@@ -1,0 +1,3 @@
+# Git runs hooks with sh, including on Windows; they require LF line endings.
+.githooks/* text eol=lf
+scripts/*.mjs text eol=lf
