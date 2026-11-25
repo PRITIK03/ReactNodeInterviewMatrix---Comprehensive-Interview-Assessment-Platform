@@ -65,22 +65,30 @@ def catalog(
     current_only: bool = False,
 ):
     with db() as c:
-        return [
-            dict(row)
-            for row in c.execute(
-                """WITH ranked AS (
+        rows = c.execute(
+            """WITH ranked AS (
                     SELECT v.id,t.company,t.level,t.kind,v.minutes,
                       row_number() OVER (PARTITION BY t.company,t.kind,t.level
                         ORDER BY v.published DESC,v.id DESC) AS position
                     FROM assessment_version v JOIN assessment_template t ON t.id=v.template
                 )
                 SELECT id,company,level,kind,minutes,
-                  (SELECT count(*) FROM assessment_question q WHERE q.version=ranked.id) AS question_count
+                  (SELECT count(*) FROM assessment_question q WHERE q.version=ranked.id) AS question_count,
+                  CASE WHEN kind='coding' THEN (SELECT b.body FROM assessment_question q
+                    JOIN question_version b ON b.id=q.question WHERE q.version=ranked.id AND q.position=0)
+                    END AS first_body
                 FROM ranked WHERE position=1 OR ?=0
                 ORDER BY company,kind,level,position LIMIT ? OFFSET ?""",
-                (int(current_only), limit, offset),
-            )
-        ]
+            (int(current_only), limit, offset),
+        )
+        editions = []
+        for row in rows:
+            edition = dict(row)
+            first = edition.pop("first_body")
+            if first:
+                edition["first_task"] = json.loads(first).get("title")
+            editions.append(edition)
+        return editions
 
 
 @router.post("/attempts")

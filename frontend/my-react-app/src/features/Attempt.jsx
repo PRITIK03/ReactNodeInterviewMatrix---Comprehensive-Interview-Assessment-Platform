@@ -94,9 +94,11 @@ export default function Attempt({ item: a, refresh, leave }) {
         <article>
           <h3>Skill breakdown</h3>
           {Object.entries(a.feedback.section_scores).map(([s, v]) => (
-            <p key={s}>
-              {s} · {v}%
-            </p>
+            <div className="skill-result" key={s}>
+              <span>{s}</span>
+              <meter min="0" max="100" value={v} aria-label={s + " correct"} />
+              <strong>{v}%</strong>
+            </div>
           ))}
           {a.feedback.recommendations.map((r) => (
             <p key={r}>{r}</p>

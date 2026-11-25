@@ -114,6 +114,7 @@ function Resume({ row, admin, revision, reload }) {
 }
 export default function Applications({
   admin,
+  stages,
   versions,
   start,
   revision,
@@ -143,21 +144,53 @@ export default function Applications({
   }, [pending, docTick, reload]);
   return (
     <Panel title={admin ? "Candidate pipeline" : "My applications"}>
-      <Field label="Stage filter">
-        <select
-          value={filter}
-          onChange={(e) => {
-            setFilter(e.target.value);
-            page(0);
-          }}
+      {admin && stages ? (
+        <div
+          className="stage-board"
+          role="group"
+          aria-label="Filter applications by current stage"
         >
-          {["", "applied", "assessment", "review", "closed"].map((v) => (
-            <option key={v} value={v}>
-              {v || "All stages"}
-            </option>
+          {["", "applied", "assessment", "review", "closed"].map((stage) => (
+            <button
+              type="button"
+              key={stage}
+              data-stage={stage}
+              aria-pressed={filter === stage}
+              onClick={() => {
+                setFilter(stage);
+                page(0);
+                select("");
+                showToken("");
+              }}
+            >
+              <span>{stage || "All stages"}</span>
+              <strong>
+                {stage
+                  ? stages[stage] || 0
+                  : Object.values(stages).reduce((a, b) => a + b, 0)}
+              </strong>
+            </button>
           ))}
-        </select>
-      </Field>
+        </div>
+      ) : (
+        <Field label="Stage filter">
+          <select
+            value={filter}
+            onChange={(e) => {
+              setFilter(e.target.value);
+              page(0);
+              select("");
+              showToken("");
+            }}
+          >
+            {["", "applied", "assessment", "review", "closed"].map((v) => (
+              <option key={v} value={v}>
+                {v || "All stages"}
+              </option>
+            ))}
+          </select>
+        </Field>
+      )}
       <Feedback resource={rows} />
       {rows.data && (
         <Table
@@ -236,7 +269,8 @@ export default function Applications({
                     <select name="version">
                       {versions.map((v) => (
                         <option value={v.id} key={v.id}>
-                          {v.company} · {v.level} · {v.kind}
+                          {v.company} · {v.level} · {v.kind} · {v.minutes} min ·{" "}
+                          {v.id.slice(0, 8)}
                         </option>
                       ))}
                     </select>

@@ -21,6 +21,7 @@ import Readiness from "./features/Readiness";
 import Applications from "./features/Applications";
 import Profile from "./features/Profile";
 import Attempt from "./features/Attempt";
+import { SignalPrint, ActivityStrip } from "./features/WorkspaceSignals";
 import PracticeLibrary from "./features/PracticeLibrary";
 import {
   AudioLines,
@@ -184,6 +185,8 @@ function Workspace({ user, signout }) {
       setStarting(false);
     }
   }
+  const showPrint =
+    !id && ["Assessments", "Jobs", "Applications"].includes(tab);
   const pageTitle =
     tab === "Assessments"
       ? id
@@ -255,7 +258,10 @@ function Workspace({ user, signout }) {
       </header>
       <div className="canvas">
         <main id="workspace" tabIndex={-1} data-area={tab.toLowerCase()}>
-          <header className="page-heading">
+          <header
+            className={"page-heading" + (showPrint ? " print-heading" : "")}
+          >
+            {showPrint && <SignalPrint />}
             <h1>{pageTitle}</h1>
             {tab === "Assessments" && !id && versions.data?.length > 0 && (
               <p className="catalog-size">
@@ -302,6 +308,7 @@ function Workspace({ user, signout }) {
               )}
               {!admin && <InvitationList start={start} revision={rev} />}
               <Applications
+                stages={overview.data?.stages}
                 admin={admin}
                 versions={versions.data || []}
                 start={start}
@@ -344,6 +351,20 @@ function Workspace({ user, signout }) {
                   start={start}
                   starting={starting}
                 />
+                {!kind && (
+                  <>
+                    <Feedback
+                      resource={overview}
+                      loading="Loading assessment activity…"
+                    />
+                    {overview.data?.activity && (
+                      <ActivityStrip
+                        overview={overview.data}
+                        openAttempt={openAttempt}
+                      />
+                    )}
+                  </>
+                )}
                 <section className="attempt-history">
                   <h2>
                     <History size={21} /> Your attempts

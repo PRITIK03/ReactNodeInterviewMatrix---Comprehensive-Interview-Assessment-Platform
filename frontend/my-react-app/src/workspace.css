@@ -19,7 +19,12 @@
   --aptitude-ink: #442b22;
   --aptitude-paper: #f0d5ae;
   --code-ink: #f2f6e9;
-  --code-ground: #254c40;
+  --code-ground: #234956;
+  --print-blue: #336375;
+  --print-rust: #ab5138;
+  --print-brass: #93713e;
+  --mist: #dce6e8;
+  --clay: #f0dbca;
   --serif: "Instrument Serif", Georgia, serif;
   --sans: "Instrument Sans", Arial, sans-serif;
   --gutter: clamp(18px, 5.5vw, 82px);
@@ -1229,4 +1234,349 @@ input[type="search"]:not(.editor *) {
   .rubric-entry {
     grid-template-columns: 1fr;
   }
+}
+
+/* A restrained print field behind the workspace title, clear of task controls. */
+.canvas {
+  background: linear-gradient(
+    120deg,
+    #edf0ec 0%,
+    var(--paper) 44%,
+    #f7f2eb 100%
+  );
+  min-height: calc(100vh - 110px);
+}
+.print-heading {
+  position: relative;
+  display: grid;
+  align-content: center;
+  justify-content: start;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: clamp(118px, 11vw, 155px);
+  padding: 16px clamp(17px, 2.6vw, 38px);
+  border-block: 1px solid var(--rule);
+  background: linear-gradient(
+    104deg,
+    #f8f5ed 9%,
+    #e5eceb 53%,
+    var(--clay) 100%
+  );
+}
+.print-heading h1,
+.print-heading .catalog-size {
+  position: relative;
+  z-index: 1;
+}
+.signal-print {
+  position: absolute;
+  inset: 0 0 0 42%;
+  pointer-events: none;
+  overflow: hidden;
+  background-image:
+    linear-gradient(#626e721a 1px, transparent 1px),
+    linear-gradient(90deg, #626e721a 1px, transparent 1px);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(90deg, transparent, black 15%);
+}
+.engraving {
+  position: absolute;
+  inset: -5% 1% -6% 5%;
+  animation: unfold 2.8s cubic-bezier(0.2, 0.64, 0.3, 1) both;
+}
+.engraving i {
+  position: absolute;
+  border: 1px solid;
+  border-radius: 50%;
+}
+@keyframes unfold {
+  from {
+    transform: translateX(4%) scaleX(0.94);
+    opacity: 0.3;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.track[data-kind="aptitude"] {
+  background-image: linear-gradient(112deg, #f4dcbb, #e7bb8c);
+}
+.track[data-kind="coding"] {
+  background-image: linear-gradient(112deg, #173942, #355a68);
+}
+.activity-strip {
+  display: grid;
+  grid-template-columns: minmax(100px, 0.65fr) minmax(160px, 1.75fr) minmax(
+      140px,
+      1fr
+    );
+  align-items: start;
+  gap: clamp(12px, 3vw, 44px);
+  padding: 20px clamp(16px, 2.3vw, 32px);
+  margin: 22px 0;
+  border-block: 1px solid var(--rule);
+  background: var(--surface);
+}
+.activity-strip h2,
+.activity-plot summary {
+  font: 600 14px/1.45 var(--sans);
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+.activity-stat strong,
+.last-debrief > strong {
+  display: block;
+  font: 400 38px/1.12 var(--serif);
+  margin: 3px 0;
+}
+.last-debrief strong small {
+  display: inline;
+  font: 500 14px var(--sans);
+}
+.last-debrief p {
+  font-size: 14px;
+  max-width: 19ch;
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+button.result-link {
+  display: inline-flex;
+  gap: 3px;
+  padding: 2px 0;
+  align-items: center;
+  color: var(--accent);
+  background: transparent;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+button.result-link:hover:enabled {
+  background: transparent;
+  color: var(--accent-hover);
+}
+.activity-plot details {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.activity-plot summary {
+  color: var(--ink);
+  cursor: pointer;
+}
+.activity-plot summary svg {
+  vertical-align: -2px;
+}
+.activity-plot summary span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.activity-plot dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(68px, 1fr));
+  gap: 5px 12px;
+  margin: 10px 0;
+  font-size: 12px;
+}
+.activity-plot dl div {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--rule);
+}
+.activity-plot dd {
+  font-weight: 650;
+  margin: 0;
+}
+.day-bars {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: clamp(2px, 0.45vw, 7px);
+  height: 36px;
+  margin-top: 7px;
+}
+.day-bars div {
+  display: flex;
+  align-items: flex-end;
+  border-bottom: 1px solid var(--strong-rule);
+  background: linear-gradient(to top, #e8eeed, transparent);
+}
+.day-bars i {
+  display: block;
+  width: 100%;
+  background: var(--print-blue);
+}
+.day-bars div:last-child i {
+  background: var(--print-rust);
+}
+.plot-axis {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-top: 3px;
+  color: var(--muted);
+}
+.stage-board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin: 14px 0 22px;
+}
+button[data-stage] {
+  --stage-ink: var(--muted);
+  background: var(--surface);
+  border-radius: 0;
+  border: 1px solid var(--rule);
+  border-top: 3px solid var(--stage-ink);
+  color: var(--ink);
+  text-align: left;
+  display: grid;
+  gap: 5px;
+  padding: 11px clamp(8px, 1.6vw, 22px);
+  text-transform: capitalize;
+}
+button[data-stage="applied"] {
+  --stage-ink: var(--print-blue);
+}
+button[data-stage="assessment"] {
+  --stage-ink: var(--print-brass);
+}
+button[data-stage="review"] {
+  --stage-ink: var(--print-rust);
+}
+button[data-stage="closed"] {
+  --stage-ink: var(--success);
+}
+button[data-stage] strong {
+  font: 400 32px/1.1 var(--serif);
+}
+button[data-stage]:hover:enabled {
+  background: var(--wash);
+}
+button[data-stage][aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--surface);
+  border-color: var(--ink);
+}
+@media (max-width: 600px) {
+  .signal-print {
+    left: 63%;
+  }
+  .activity-strip {
+    grid-template-columns: 1fr 2fr;
+    gap: 12px;
+  }
+  .last-debrief {
+    grid-column: 1/-1;
+    border-top: 1px solid var(--rule);
+    padding-top: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+  .last-debrief p {
+    max-width: none;
+    margin: 0;
+  }
+  .last-debrief > strong {
+    font-size: 25px;
+  }
+  .stage-board {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  button[data-stage=""] {
+    grid-column: 1/-1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  button[data-stage] {
+    padding: 8px 3px;
+    text-align: center;
+    font-size: 12px;
+  }
+  button[data-stage=""] {
+    padding-inline: 10px;
+  }
+}
+@media (max-width: 380px) {
+  .print-heading {
+    min-height: 105px;
+  }
+  .print-heading h1 {
+    font-size: 38px;
+  }
+  .signal-print {
+    left: 66%;
+  }
+  button[data-stage] {
+    font-size: 11px;
+  }
+}
+
+.skill-result {
+  display: grid;
+  grid-template-columns: minmax(90px, 1fr) 2fr 3.4em;
+  align-items: center;
+  gap: 9px;
+  max-width: 480px;
+  margin-block: 6px;
+  font-size: 14px;
+}
+.skill-result span {
+  text-transform: capitalize;
+}
+.skill-result meter {
+  width: 100%;
+  accent-color: var(--print-blue);
+}
+.skill-result strong {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.level-name {
+  margin-right: auto;
+}
+.level-name strong {
+  display: block;
+}
+.level-name small {
+  margin-top: 2px;
+  font-weight: 450;
+}
+.level-panel h2:focus:not(:focus-visible) {
+  outline: 0;
+}
+@media (max-width: 550px) {
+  .level-name {
+    grid-column: 2;
+  }
+  .engraving {
+    left: -42px;
+    right: -90px;
+  }
+}
+
+.level-panel h2:focus-visible {
+  outline: 0;
+  border-left: 3px solid var(--focus);
+  padding-left: 8px;
+}
+.status[data-state="applied"] {
+  color: #345467;
+  background: var(--mist);
+}
+.status[data-state="assessment"] {
+  color: var(--warning);
+  background: var(--warning-wash);
+}
+.status[data-state="review"] {
+  color: var(--accent);
+  background: var(--accent-wash);
+}
+.status[data-state="closed"] {
+  color: var(--muted);
+  background: var(--wash);
 }

@@ -115,3 +115,23 @@ def test_partial_python_and_source_change(site, monkeypatch):
     monkeypatch.setattr(followups, "request_json", changed)
     assert c.post(route, json={"turn": 1, "use_gemini": True}).status_code == 409
     assert "count" in c.post(route, json={"turn": 1}).json()["prompt"]
+
+
+def test_practice_followups_ground_algorithm_questions_in_call_tokens():
+    examples = [
+        ("ordered = sorted(sessions)", "ordering"),
+        ("times.sort()", "ordering"),
+        ("start = bisect_right(ends, minute)", "boundary"),
+        ("first = heapq.heappop(queue)", "heap"),
+        ("unique = set(values)", "repeated"),
+    ]
+    for source, focus in examples:
+        anchor = followups.anchors(source)[0]
+        assert focus in followups.local_question(anchor, 1)
+    for source in (
+        'label = "sorted(values)"',
+        "value = sorted_count  # sorted(values)",
+    ):
+        assert "ordering" not in followups.local_question(
+            followups.anchors(source)[0], 1
+        )

@@ -129,6 +129,9 @@ export default function PracticeLibrary({
                 className={"level-choice " + v.level}
                 disabled={starting}
                 onClick={() => start(v.id)}
+                aria-describedby={
+                  "task-" + v.id + " count-" + v.id + " time-" + v.id
+                }
                 aria-label={
                   "Start " + displayName(v.level) + " " + displayName(kind)
                 }
@@ -138,12 +141,21 @@ export default function PracticeLibrary({
                   <i />
                   <i />
                 </span>
-                <strong>{displayName(v.level)}</strong>
-                <span className="level-fact">
-                  <ListChecks />
-                  {v.question_count} questions
+                <span className="level-name" id={"task-" + v.id}>
+                  <strong>{displayName(v.level)}</strong>
+                  {v.first_task && (
+                    <small>
+                      {v.question_count > 1 ? "Starts with " : ""}
+                      {v.first_task}
+                    </small>
+                  )}
                 </span>
-                <span className="level-fact">
+                <span className="level-fact" id={"count-" + v.id}>
+                  <ListChecks />
+                  {v.question_count}{" "}
+                  {v.question_count === 1 ? "question" : "questions"}
+                </span>
+                <span className="level-fact" id={"time-" + v.id}>
                   <Clock3 />
                   {v.minutes} min
                 </span>

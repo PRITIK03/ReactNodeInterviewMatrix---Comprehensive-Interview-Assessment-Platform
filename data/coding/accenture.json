@@ -84,6 +84,36 @@
         {"input": "2 3\n1 2 3\n4 5 6\n", "output": "6 15\n"},
         {"input": "3 2\n1 1\n1 1\n1 1\n", "output": "2 2 2\n"}
       ]
+    },
+    {
+      "title": "Interview room demand",
+      "description": "The first line contains N (0 to 10000). Each of the next N lines contains a start minute and an end minute (0 ≤ start < end ≤ 1440). Print the minimum number of rooms needed to hold all interviews. An interview ending at a minute frees its room for another starting at that minute.",
+      "capstone": true,
+      "languages": [
+        "Python"
+      ],
+      "test_cases": [
+        {
+          "input": "4\n30 60\n60 90\n15 45\n40 50\n",
+          "output": "3\n"
+        },
+        {
+          "input": "0\n",
+          "output": "0\n"
+        },
+        {
+          "input": "3\n5 6\n4 5\n3 4\n",
+          "output": "1\n"
+        },
+        {
+          "input": "3\n7 20\n7 20\n7 20\n",
+          "output": "3\n"
+        },
+        {
+          "input": "5\n9 10\n1 15\n2 6\n4 5\n6 9\n",
+          "output": "3\n"
+        }
+      ]
     }
   ]
 }

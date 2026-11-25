@@ -36,7 +36,7 @@ function Assignments({ jobVersion, versions, revision, reload }) {
           <select name="assessment">
             {versions.map((v) => (
               <option key={v.id} value={v.id}>
-                {v.company} · {v.level} · {v.kind}
+                {v.company} · {v.level} · {v.kind} · {v.minutes} min · {v.id.slice(0, 8)}
               </option>
             ))}
           </select>

@@ -4,6 +4,8 @@ A local recruiter and candidate workspace for versioned assessments and evidence
 
 Recruiters can now generate an evidence-backed scorecard for a specific job version, accept or override each finding, and record a human disposition. Candidates can use Monaco with offline draft recovery and a private microphone preflight. The [release guide](docs/release.md) contains the presentation sequence, API map, container configuration, migration procedure and security gates. The [evaluation architecture](docs/architecture/evaluation-and-readiness.md) explains how citations and scores are verified.
 
+The practice library has timed aptitude and Python editions at three levels. Advanced Python sessions feature a single scheduling, graph or sequence problem. Candidates can revisit their latest result from a 14-day activity chart. Recruiters can filter their organization’s applications by current stage. [Practice formats and reporting](docs/release.md#practice-formats-and-workspace-reporting)
+
 ## Run locally on Windows x64
 
 Use Python 3.10+ with venv, Node.js 24.15 or newer in the 24 LTS line with npm, and PowerShell. The first setup needs internet for dependencies and two checksum-verified binaries. Run from the repository root.

@@ -84,6 +84,36 @@
         {"input": "aabcccccaaa\n", "output": "a2b1c5a3\n"},
         {"input": "abcdef\n", "output": "abcdef\n"}
       ]
+    },
+    {
+      "title": "Merge availability windows",
+      "description": "Read N followed by N pairs of integer minutes, start and end (0 ≤ start < end ≤ 1440). The pairs can be in any order. Print the total number of distinct minutes covered by at least one half-open interval [start, end). N is 0 to 10000.",
+      "capstone": true,
+      "languages": [
+        "Python"
+      ],
+      "test_cases": [
+        {
+          "input": "4\n20 40\n5 12\n8 20\n60 65\n",
+          "output": "40\n"
+        },
+        {
+          "input": "0\n",
+          "output": "0\n"
+        },
+        {
+          "input": "3\n0 10\n0 10\n2 3\n",
+          "output": "10\n"
+        },
+        {
+          "input": "3\n20 24\n1 3\n10 15\n",
+          "output": "11\n"
+        },
+        {
+          "input": "2\n2 4\n4 7\n",
+          "output": "5\n"
+        }
+      ]
     }
   ]
 }

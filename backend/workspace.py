@@ -23,6 +23,14 @@ def overview(user=Depends(actor)):
                 "name": c.execute(
                     "SELECT name FROM organization WHERE id=?", (org,)
                 ).fetchone()[0],
+                "stages": {
+                    row["stage"]: row["amount"]
+                    for row in c.execute(
+                        """SELECT a.stage, count(*) AS amount FROM application a
+                        JOIN candidate p ON p.id=a.candidate WHERE p.org=? GROUP BY a.stage""",
+                        (org,),
+                    )
+                },
                 "metrics": {
                     "Jobs": c.execute(
                         "SELECT count(*) FROM job WHERE org=?", (org,)
@@ -40,8 +48,30 @@ def overview(user=Depends(actor)):
             "SELECT count(*) attempts,count(score) completed,round(avg(100.0*score/nullif(total,0))) average FROM assessment_attempt WHERE owner=?",
             (user["id"],),
         ).fetchone()
+        today = now() // 86400
+        first_day = today - 13
+        activity = {
+            row["day"]: row["amount"]
+            for row in c.execute(
+                """SELECT submitted/86400 AS day, count(*) AS amount FROM assessment_attempt
+                WHERE owner=? AND status='complete' AND submitted>=? AND submitted<?
+                GROUP BY submitted/86400""",
+                (user["id"], first_day * 86400, (today + 1) * 86400),
+            )
+        }
+        last = c.execute(
+            """SELECT a.id,t.kind,t.level,a.score,a.total FROM assessment_attempt a
+            JOIN assessment_version v ON v.id=a.version JOIN assessment_template t ON t.id=v.template
+            WHERE a.owner=? AND a.status='complete' ORDER BY a.submitted DESC,a.id DESC LIMIT 1""",
+            (user["id"],),
+        ).fetchone()
         return {
             "name": "Candidate workspace",
+            "activity": [
+                {"day": day * 86400, "count": activity.get(day, 0)}
+                for day in range(first_day, today + 1)
+            ],
+            "last_result": dict(last) if last else None,
             "metrics": {
                 "Attempts": stats["attempts"],
                 "Completed": stats["completed"],

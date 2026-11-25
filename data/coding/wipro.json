@@ -84,6 +84,36 @@
         {"input": "3\n1 2 3\n4 5 6\n7 8 9\n", "output": "15\n"},
         {"input": "2\n2 3\n4 5\n", "output": "7\n"}
       ]
+    },
+    {
+      "title": "Choose a review schedule",
+      "description": "Read N followed by N lines of start minute, end minute and review points. Choose non-overlapping sessions to maximize total points and print that total. A session may start when the previous one ends. Input order is arbitrary, N is 0 to 10000, and each session has positive duration and positive integer points.",
+      "capstone": true,
+      "languages": [
+        "Python"
+      ],
+      "test_cases": [
+        {
+          "input": "4\n0 5 8\n0 2 5\n2 5 6\n5 7 3\n",
+          "output": "14\n"
+        },
+        {
+          "input": "0\n",
+          "output": "0\n"
+        },
+        {
+          "input": "3\n2 3 2\n0 5 10\n1 2 4\n",
+          "output": "10\n"
+        },
+        {
+          "input": "2\n1 2 3\n2 3 4\n",
+          "output": "7\n"
+        },
+        {
+          "input": "4\n6 8 4\n3 6 10\n1 7 20\n0 3 9\n",
+          "output": "23\n"
+        }
+      ]
     }
   ]
 }

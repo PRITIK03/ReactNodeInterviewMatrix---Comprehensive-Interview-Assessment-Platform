@@ -16,14 +16,29 @@ The candidate and recruiter workspaces share a horizontal index. The practice li
 
 | Review | Applied decision and verification |
 | --- | --- |
-| Visual identity | Flat paper and ink surfaces, vermilion actions, ochre aptitude and green coding covers. Logo files and fonts resolve locally. |
+| Visual identity | Mist-gray canvas, warm paper, vermilion actions, ochre aptitude and petrol-blue coding covers. The title band carries an original two-color contour print. Logo files and fonts resolve locally. |
 | Hierarchy and density | One level of covers in the library. Hairlines separate sections, criteria, citations and history. Empty tables omit their headers, and short lists omit pagination. |
 | Typography | The font assets ship in the build. Form labels stay visible while filled. Time and scoring remain readable at narrow widths. |
 | Color | The paired body, muted, primary-action and status text colors each exceed 6:1 against their intended surfaces. Text, symbols and labels communicate state alongside color. These measurements cover the specified pairs. |
 | Real states | An unauthorized session opens sign-in. An unavailable workspace offers retry. The library distinguishes loading, empty and available tracks. Disabled actions, saved replies and expiring attempts have distinct states. |
-| Motion and input | Short transitions respond to selecting a section or hovering a cover. Reduced-motion mode removes animations and transitions. A skip link, focus outlines and native inputs support keyboard navigation. |
+| Motion and input | The header print settles after 2.8 seconds. Hover and focus transitions stay local to controls. Reduced-motion mode removes animations and transitions. A skip link, focus outlines and native inputs support keyboard navigation. |
 
 The attempt API returns server time alongside its deadline. The worksheet measures elapsed time locally and checks the private attempt clock when a background tab returns. The server validates every deadline-sensitive write. After an ambiguous start response, retrying the same selection within the workspace reuses its request key.
+
+## Practice formats and workspace reporting
+
+| Track | Beginner | Intermediate | Advanced |
+| --- | --- | --- | --- |
+| Aptitude | 15 questions · 20 min | 12 questions · 24 min | 10 questions · 28 min |
+| Python | 3 problems · 30 min | 2 problems · 36 min | 1 capstone · 40 min |
+
+SHL describes a numerical test of up to 16 questions in 20 minutes. HackerRank supports setting a recommended duration per coding question. These informed the starting pace. The six budgets above are editorial choices for InterviewMatrix. Calibrating them for selection would require representative solve-time, abandonment and item-performance data. The company labels identify practice collections. [SHL fact sheet](https://service.shl.com/docs/Verify_Numerical_Ability_Fact_Sheet.pdf) · [HackerRank question authoring](https://support.hackerrank.com/articles/2474669643-coding-question)
+
+Aptitude editions sample the bank's categories round-robin, then preserve the selected items' original order. Repeating the same edition gives the same questions. Advanced coding editions cover interview room demand, peak submission windows, module prerequisites, merged availability and weighted review scheduling. Each has one public example and four additional grading cases. The practice bank is open source. Changing the membership or time budget publishes a new edition and preserves existing invitations, deadlines and results.
+
+The candidate library shows 14 UTC calendar days of graded submissions by submission date, including assigned work. Open the plot caption to read each daily count. The last-result link returns to the saved assessment with category accuracy or execution results. In a Python discussion, the local interviewer can ask about ordering, heaps, binary search boundaries or duplicates when the corresponding call appears in the saved line. Gemini remains an explicit choice.
+
+Recruiter stage buttons count each application once in its current stage across the organization. Selecting one filters the applicant list. These are inventory counts at the time the workspace loads or refreshes. Gradii's public description of role-based screening and team review informed the emphasis on a visible human review stage. [Gradii careers](https://gradii.ai/careers)
 
 ## API and operations
 

@@ -5,7 +5,9 @@ import json
 import os
 import sqlite3
 import time
+from collections import defaultdict
 from contextlib import contextmanager
+from itertools import zip_longest
 from pathlib import Path
 from uuid import uuid4
 
@@ -68,6 +70,7 @@ CREATE TABLE IF NOT EXISTS question_version(id TEXT PRIMARY KEY,question TEXT RE
 CREATE TABLE IF NOT EXISTS assessment_question(version TEXT REFERENCES assessment_version,position INTEGER,question TEXT REFERENCES question_version,PRIMARY KEY(version,position),UNIQUE(version,question));
 CREATE TABLE IF NOT EXISTS invitation(id TEXT PRIMARY KEY,application TEXT REFERENCES application,version TEXT REFERENCES assessment_version,token TEXT UNIQUE,expires INTEGER,accepted INTEGER);
 CREATE TABLE IF NOT EXISTS assessment_attempt(id TEXT PRIMARY KEY,owner TEXT REFERENCES account,version TEXT REFERENCES assessment_version,invitation TEXT UNIQUE REFERENCES invitation,request_key TEXT,started INTEGER,expires INTEGER,status TEXT,submitted INTEGER,score INTEGER,total INTEGER,UNIQUE(owner,request_key));
+CREATE INDEX IF NOT EXISTS attempt_owner_submitted ON assessment_attempt(owner,submitted DESC,id DESC) WHERE status='complete';
 CREATE INDEX IF NOT EXISTS attempt_owner_history ON assessment_attempt(owner,started DESC,id DESC);
 CREATE TABLE IF NOT EXISTS answer(attempt TEXT REFERENCES assessment_attempt,question TEXT REFERENCES question_version,value TEXT,PRIMARY KEY(attempt,question));
 CREATE TABLE IF NOT EXISTS code_followup(
@@ -132,16 +135,44 @@ def initialize():
           BEGIN SELECT RAISE(ABORT,'published membership'); END""")
 
 
+PRACTICE_FORMATS = {
+    "aptitude": {"beginner": (15, 20), "intermediate": (12, 24), "advanced": (10, 28)},
+    "coding": {"beginner": (3, 30), "intermediate": (2, 36), "advanced": (1, 40)},
+}
+
+
+def practice_items(kind, level, items, count):
+    if kind == "aptitude":
+        # Cover the bank's categories before taking a second item from any one.
+        groups = defaultdict(list)
+        for index, item in enumerate(items):
+            groups[item.get("category") or item.get("section") or "general"].append(
+                index
+            )
+        rounds = zip_longest(*groups.values())
+        indices = sorted(
+            [i for group in rounds for i in group if i is not None][:count]
+        )
+    elif level == "advanced":
+        indices = [i for i, item in enumerate(items) if item.get("capstone")]
+    else:
+        indices = list(range(min(count, len(items))))
+    if len(indices) != count:
+        raise ValueError(f"Incomplete {level} {kind} practice edition")
+    return [
+        (i, json.dumps(items[i], sort_keys=True, ensure_ascii=False)) for i in indices
+    ]
+
+
 def seed(c):
     # A manifest digest fixes membership, ordering and item bodies on publication.
     for kind in ("aptitude", "coding"):
         for path in sorted((ROOT / "data" / kind).glob("*.json")):
             for level, items in json.loads(path.read_text(encoding="utf8")).items():
                 template = f"{path.stem}-{level}-{kind}"
-                bodies = [
-                    json.dumps(i, sort_keys=True, ensure_ascii=False) for i in items
-                ]
-                version = digest(json.dumps([template, bodies, 30]))
+                count, minutes = PRACTICE_FORMATS[kind][level]
+                selected = practice_items(kind, level, items, count)
+                version = digest(json.dumps([template, selected, minutes]))
                 if c.execute(
                     "SELECT 1 FROM assessment_version WHERE id=?", (version,)
                 ).fetchone():
@@ -153,7 +184,7 @@ def seed(c):
                 # Membership may only be inserted before the parent version exists.
                 if not os.getenv("DATABASE_URL"):
                     c.execute("PRAGMA defer_foreign_keys=ON")
-                for index, body in enumerate(bodies):
+                for position, (index, body) in enumerate(selected):
                     qid = f"{template}-{index}"
                     vid = digest(qid + body)
                     c.execute(
@@ -165,9 +196,11 @@ def seed(c):
                     )
                     c.execute(
                         "INSERT INTO assessment_question VALUES(?,?,?)",
-                        (version, index, vid),
+                        (version, position, vid),
                     )
                 c.execute(
-                    "INSERT INTO assessment_version VALUES(?,?,30,?)",
-                    (version, template, now()),
+                    """INSERT INTO assessment_version SELECT ?,?,?,
+                    CASE WHEN max(published)>=? THEN max(published)+1 ELSE ? END
+                    FROM assessment_version WHERE template=?""",
+                    (version, template, minutes, now(), now(), template),
                 )

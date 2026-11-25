@@ -76,6 +76,15 @@ def anchors(source):
 def local_question(anchor, turn):
     kind, words = anchor["kind"], anchor["structure"].split()
     if turn == 1:
+        calls = {word for word, following in zip(words, words[1:]) if following == "("}
+        if calls & {"sort", "sorted"}:
+            return "What does the ordering from this call let the next step assume?"
+        if calls & {"heappop", "heappush"}:
+            return "Which item should be at the front of this heap, and how does that help your solution?"
+        if calls & {"bisect_left", "bisect_right"}:
+            return "What boundary are you searching for here, and how should equal values be handled?"
+        if "set" in calls:
+            return "What should happen to repeated values when this line runs?"
         if kind == "loop":
             return f"What does one iteration of this {words[0]} loop accomplish?"
         if kind == "assignment":
