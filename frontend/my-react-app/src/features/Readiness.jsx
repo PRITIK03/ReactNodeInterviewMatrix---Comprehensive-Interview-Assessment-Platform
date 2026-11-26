@@ -1,22 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { AudioPreflight, initialAudio, audioReady } from "./audio";
+import { browserMonitor, initialAudio, audioReady } from "./audio";
 export default function Readiness() {
   const [state, set] = useState(initialAudio),
     ctrl = useRef(null);
   useEffect(() => {
-    const c = new AudioPreflight(
-      {
-        media: navigator.mediaDevices,
-        permissions: navigator.permissions,
-        Context: window.AudioContext || window.webkitAudioContext,
-        Recorder: window.MediaRecorder,
-        frame: (cb) => requestAnimationFrame(cb),
-        cancel: (id) => cancelAnimationFrame(id),
-        url: (b) => URL.createObjectURL(b),
-        revoke: (u) => URL.revokeObjectURL(u),
-      },
-      set,
-    );
+    const c = browserMonitor(set);
     ctrl.current = c;
     c.init();
     return () => {

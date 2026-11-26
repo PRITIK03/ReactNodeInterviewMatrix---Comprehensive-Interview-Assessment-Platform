@@ -1,3 +1,11 @@
+import {
+  FileText,
+  Terminal,
+  CircleHelp,
+  GitBranch,
+  CheckCheck,
+} from "lucide-react";
+import SharedExplanations from "./SharedExplanations";
 import { useState } from "react";
 import { api, date } from "./client";
 import { useResource } from "./useResource";
@@ -123,8 +131,77 @@ export default function Evaluation({ application, admin }) {
               </dd>
             </div>
           </dl>
+          <div className="evidence-map">
+            <h4>
+              <GitBranch size={24} aria-hidden="true" /> Evidence trail
+            </h4>
+            <p>
+              {card.provider === "gemini"
+                ? "Gemini verification"
+                : "Published evidence rules"}{" "}
+              · Select a criterion to inspect its finding.
+            </p>
+            {card.criteria.map((v) => {
+              const last = card.history
+                .filter(
+                  (e) =>
+                    e.criterion === v.criterion_id &&
+                    ["override", "accept"].includes(e.action),
+                )
+                .at(-1);
+              return (
+                <button
+                  key={v.criterion_id}
+                  className="trace-route"
+                  onClick={() => {
+                    const target = document.getElementById(
+                      "finding-" + v.criterion_id,
+                    );
+                    const details = target?.querySelector("details");
+                    if (details) details.open = true;
+                    target?.focus();
+                  }}
+                >
+                  <span className="trail-criterion">
+                    {v.rubric.name}
+                    <small>Weight {v.rubric.weight}%</small>
+                  </span>
+                  <i aria-hidden="true" />
+                  <span className="trail-source">
+                    {v.source?.document ? (
+                      <FileText size={15} aria-hidden="true" />
+                    ) : v.source ? (
+                      <Terminal size={15} aria-hidden="true" />
+                    ) : (
+                      <CircleHelp size={15} aria-hidden="true" />
+                    )}
+                    {card.stale
+                      ? "Source changed"
+                      : v.source?.document
+                        ? "Resume claim"
+                        : v.source
+                          ? "Assessment record"
+                          : "Missing evidence"}
+                  </span>
+                  <i aria-hidden="true" />
+                  <span className="trail-decision" data-approved={v.approved}>
+                    {v.approved && <CheckCheck aria-hidden="true" size={16} />}
+                    {last?.action === "override"
+                      ? "Reviewer override"
+                      : v.approved
+                        ? "Reviewer accepted"
+                        : "Awaiting review"}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
           {card.criteria.map((v) => (
-            <article key={v.criterion_id}>
+            <article
+              id={"finding-" + v.criterion_id}
+              tabIndex={-1}
+              key={v.criterion_id}
+            >
               <h4>
                 {v.rubric.name} · {v.rubric.weight}%
               </h4>
@@ -174,6 +251,16 @@ export default function Evaluation({ application, admin }) {
                   ))}
                 </details>
               )}
+              {v.source?.attempt &&
+                ["coding", "code_review"].includes(
+                  v.rubric.evaluation_type,
+                ) && (
+                  <SharedExplanations
+                    application={application}
+                    revision={revision}
+                    source={v.source}
+                  />
+                )}
               {v.approved && <p>Reviewer score {v.reviewed_score}</p>}
               {!locked && (
                 <Form

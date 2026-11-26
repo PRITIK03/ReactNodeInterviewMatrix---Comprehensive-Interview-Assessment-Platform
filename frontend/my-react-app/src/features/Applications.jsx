@@ -1,3 +1,5 @@
+import SharedExplanations from "./SharedExplanations";
+import ResumeBatch from "./ResumeBatch";
 import Evaluation from "./Evaluation";
 import { useResource } from "./useResource";
 import React, { useEffect, useState } from "react";
@@ -13,56 +15,11 @@ import {
   Pager,
 } from "./ui";
 
-function SharedExplanations({ application, revision }) {
-  const [open, setOpen] = useState(false);
-  const [offset, page] = useState(0);
-  const rows = useResource(
-    open &&
-      "/applications/" + application + "/shared-explanations?offset=" + offset,
-    revision,
-  );
-  return (
-    <section className="shared-explanations">
-      <button
-        type="button"
-        className="quiet"
-        aria-expanded={open}
-        onClick={() => {
-          if (!open) rows.retry();
-          setOpen(!open);
-        }}
-      >
-        Shared coding explanations
-      </button>
-      {open && (
-        <>
-          <Feedback resource={rows} />
-          {rows.data?.length === 0 && (
-            <p className="empty">No shared explanations on this page.</p>
-          )}
-          {rows.data?.map((r) => (
-            <article key={[r.attempt, r.question, r.turn].join("/")}>
-              <small>
-                Problem {r.position + 1} · Follow-up {r.turn} · Saved line{" "}
-                {r.line} · Shared {date(r.shared_at)}
-              </small>
-              <h4>{r.prompt}</h4>
-              <pre>{r.excerpt}</pre>
-              <blockquote>{r.reply}</blockquote>
-            </article>
-          ))}
-          <Pager offset={offset} onPage={page} count={rows.data?.length} />
-        </>
-      )}
-    </section>
-  );
-}
-
 function Resume({ row, admin, revision, reload }) {
   const r = useResource("/resumes/" + row.id, revision),
     data = r.data;
   return (
-    <article>
+    <article id={"resume-" + row.id} tabIndex={-1}>
       <h4>
         {row.format.toUpperCase()} · {date(row.created)}{" "}
         <Status>{row.status}</Status>
@@ -169,24 +126,26 @@ export default function Applications({
     [id, select] = useState(""),
     [offset, page] = useState(0),
     [token, showToken] = useState("");
+  const [docTick, update] = useState(0);
   const rows = useResource(
       "/applications?stage=" + filter + "&offset=" + offset,
       revision,
     ),
     item = useResource(id && "/applications/" + id, revision),
-    docs = useResource(id && "/applications/" + id + "/resumes", revision);
-  const [docTick, update] = useState(0);
+    docs = useResource(
+      id && "/applications/" + id + "/resumes",
+      revision + "/" + docTick,
+    );
   const pending = docs.data?.some((d) =>
     ["uploading", "queued", "processing", "retrying"].includes(d.status),
   );
   useEffect(() => {
     if (!pending) return;
     const t = setTimeout(() => {
-      update(docTick + 1);
-      reload();
+      update((n) => n + 1);
     }, 5000);
     return () => clearTimeout(t);
-  }, [pending, docTick, reload]);
+  }, [pending, docTick]);
   return (
     <Panel title={admin ? "Candidate pipeline" : "My applications"}>
       {admin && stages ? (
@@ -403,6 +362,14 @@ export default function Applications({
                     : "I authorize extraction and review for this application."}
                 </label>
               </Form>
+              {admin && (
+                <ResumeBatch
+                  key={"batch-" + id}
+                  application={id}
+                  documents={docs.data}
+                  refresh={() => update((n) => n + 1)}
+                />
+              )}
               <Feedback resource={docs} />
               {docs.data?.map((r) => (
                 <Resume

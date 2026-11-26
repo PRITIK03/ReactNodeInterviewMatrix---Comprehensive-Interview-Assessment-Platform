@@ -353,6 +353,8 @@ def shared_explanations(
     key: str,
     offset: int = Query(0, ge=0),
     limit: int = Query(50, ge=1, le=100),
+    attempt: str = Query("", max_length=64),
+    question: str = Query("", max_length=64),
     user=Depends(recruiter),
 ):
     with db() as c:
@@ -368,8 +370,9 @@ def shared_explanations(
                JOIN explanation_review r ON r.attempt=f.attempt AND r.question=f.question AND r.turn=f.turn
                JOIN assessment_question aq ON aq.version=t.version AND aq.question=f.question
                WHERE i.application=? AND p.org=? AND t.status='complete' AND r.shared_at IS NOT NULL AND t.started>?
+               AND (?='' OR t.id=?) AND (?='' OR f.question=?)
                ORDER BY r.shared_at DESC,t.id,aq.position,f.turn LIMIT ? OFFSET ?""",
-                (key, user["org"], now() - 90 * 86400, limit, offset),
+                (key, user["org"], now() - 90 * 86400, attempt, attempt, question, question, limit, offset),
             )
         ]
 

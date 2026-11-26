@@ -1,34 +1,60 @@
 # InterviewMatrix
 
-**The code passed. Why does it work?**
+**“Python” on page one. Five passing tests. Two different pieces of evidence.**
 
-InterviewMatrix is a screening workspace for candidates and recruiters. A candidate solves a timed problem, then talks through a line of their own Python. A recruiter can follow the test verdict back to the submitted work, inspect the evidence for a job criterion, and record a hiring decision.
+I first built InterviewMatrix in my third year. After a technical interview, I came back to it with one question: if I were the reviewer, could I explain exactly where a score came from?
 
-![Application review ledger with four job criteria and inspectable evidence](docs/images/application-review.webp)
+This fictional application shows how the answer changes with the source. On page 1 of the resume, characters 25–31 spell *Python* under Skills. An exact-match rule proposed 100/100 for that criterion, and the reviewer accepted it. The resume makes no claim about system design, so that criterion stays unscored. To see what the candidate can do with Python, open the submitted program.
 
-## Walk through the product
+![Recruiter evidence trail showing the Python citation on page 1, the accepted finding, and missing system-design evidence](docs/screenshots/01-recruiter-evidence-trail.png)
 
-**Start with two overlapping meetings.** The Python practice problem *Merge availability windows* asks how many minutes are covered. Counting both meetings in full counts their overlap twice. In the public preview, you can step through four windows and see why the answer is 40. [Explore the interval trace](docs/images/python-trace.webp)
+## At the keyboard
 
-In **Practice library**, choose a company, then **Aptitude** or **Python coding**, then a level. Each edition shows its question count and time budget before the clock starts. In the editor, pressing Enter after `for` or `if` puts the cursor inside the block. Save the draft and you can reopen it during the attempt.
+Four availability windows arrive out of order. Their lengths add up to 44 minutes, but some overlap. The candidate’s job is to count each minute once. [Step through the example](docs/images/python-trace.webp)
 
-![Timed Python workspace with the availability problem beside the candidate’s saved solution](docs/images/python-workspace.webp)
+In **Practice library**, choose a company, track and level to see the time budget before starting. The Python editor indents nested blocks on Enter and saves drafts on request. Voice input opens an editable transcript. The candidate chooses when to insert it, and one Undo removes the insertion. Browser dictation may send audio to the browser’s speech provider. [Microphone readiness and playback](docs/images/microphone-readiness.webp)
 
-### Demo a code follow-up
+![Python editor beside the availability problem, with the idle voice control and editable preview](docs/screenshots/02-voice-python-editor.png)
+
+The submitted solution sorts the windows and counts only newly covered minutes. For the public example it returns **40**. One public case and four hidden cases passed in isolated Python execution. Reopening the attempt brings back the submitted code and its individual verdicts.
+
+![The submitted solution and its five stored test verdicts](docs/screenshots/03-python-test-verdicts.png)
+
+## After the clock stops
 
 > Why did you separate this work into covered_minutes?
 
-That question refers to a function in the saved solution below. Select **Dictate answer** or type a reply, edit the text, then select **Save explanation**. Local feedback quotes the candidate’s reasoning and suggests what to explain next. Optional Gemini feedback requires a separate sharing choice. The browser’s dictation service may process audio remotely. [Microphone readiness and local playback](docs/images/microphone-readiness.webp)
+That follow-up points to a function the candidate actually wrote. They can type or dictate an explanation, edit it, then save it. Coaching is separate from correctness. In a completed company assignment, the candidate can share an individual answer with the recruiter and later withdraw access. [Candidate explanation and coaching notes](docs/images/screening-debrief.webp)
 
-![A saved line of Python, its follow-up question, the confirmed answer and the passages used for coaching](docs/images/screening-debrief.webp)
+![Recruiter view of the shared explanation linked to the graded coding submission](docs/screenshots/05-shared-code-explanation.png)
 
-**Come back after submission.** Each public and hidden test runs in a fresh, resource-limited Python/WASI guest. **Your attempts → Open** brings back the score, individual verdicts and discussion. Coaching has no weight in the score. For a completed company assignment, the candidate chooses which explanations the recruiter can read and can withdraw access later. [View a graded Python attempt](docs/images/assessment-result.webp)
+## Back at the recruiter’s desk
 
-### At the recruiter’s desk
+A recruiter can publish weighted criteria, invite a candidate to an assessment, inspect the evidence and record a review. For resume intake, **Upload a group** accepts up to eight PDFs or DOCX files for the open application, with consent. Each file has its own processing state and retry. Uploaded documents persist when the browser selection clears.
 
-Publish a job with weighted criteria, invite a candidate to an assessment, then open their application. A Python result has test verdicts. A resume finding has a source passage. A reviewer can inspect either, override a finding with a reason and record the decision. The screenshots use fictional applications. [Recruiter walkthrough](docs/release.md#local-setup-and-walkthrough)
+In this walkthrough, a PDF and a DOCX both finished extraction with warnings. Both show **needs review**. Selecting either opens that document for inspection. Scanned PDFs use OCR when native extraction is insufficient. [Reproduce the walkthrough](docs/release.md#local-setup-and-walkthrough)
 
-![Recruiter pipeline showing four fictional applications in four different stages](docs/images/recruiter-pipeline.webp)
+![Two documents awaiting inspection after extraction](docs/screenshots/04-resume-group-upload.png)
+
+## Inside the application
+
+FastAPI binds an attempt to its published questions and deadline. The runner produces test verdicts, the document worker produces cited facts, and the evaluation service checks those sources against the job rubric. A recruiter records the human review.
+
+```mermaid
+flowchart TB
+    UI["Candidate and recruiter · React / Vite"] <--> API["FastAPI · session and organization checks"]
+    API -->|Original files| Store["Private S3-compatible storage"]
+    API -->|Document IDs| Queue["Celery broker"]
+    Queue --> Worker["Document worker · scan, extract, OCR"]
+    Store --> Worker
+    API <-->|Python and test verdicts| Runner["Isolated Python / WASI runner"]
+    Worker -->|Facts and citations| DB[("SQLite locally / PostgreSQL in deployment")]
+    API <-->|Attempts and results| DB
+    API --> Evaluation["Evaluation service · validate evidence and score"]
+    Evaluation <--> DB
+    Evaluation <-->|With candidate consent| Gemini["Optional Gemini provider"]
+    UI -->|Inspect evidence and record decision via API| Review["Human review"]
+```
 
 ## Run locally on Windows x64
 

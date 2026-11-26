@@ -218,3 +218,19 @@ export class AudioPreflight {
     this.stop();
   }
 }
+
+export function browserMonitor(notify) {
+  return new AudioPreflight(
+    {
+      media: navigator.mediaDevices,
+      permissions: navigator.permissions,
+      Context: window.AudioContext || window.webkitAudioContext,
+      Recorder: window.MediaRecorder,
+      frame: (cb) => requestAnimationFrame(cb),
+      cancel: (id) => cancelAnimationFrame(id),
+      url: (b) => URL.createObjectURL(b),
+      revoke: (u) => URL.revokeObjectURL(u),
+    },
+    notify,
+  );
+}

@@ -2083,3 +2083,31 @@ button[data-stage][aria-pressed="true"] {
     transition: flex-basis 160ms var(--motion-settle);
   }
 }
+
+.evidence-map,.batch-session {border-block:1px solid var(--rule);padding:1.25rem 0;margin:1rem 0}
+.evidence-map h4,.batch-session h4 {display:flex;align-items:center;gap:.5rem;font:400 2rem var(--serif)}
+.evidence-map button.trace-route {display:grid;grid-template-columns:minmax(0,1fr) minmax(.8rem,4vw) minmax(0,1fr) minmax(.8rem,4vw) minmax(0,1fr);align-items:center;gap:.5rem;width:100%;background:var(--surface);color:var(--ink);border:0;border-top:1px solid var(--rule);border-radius:0;text-align:start;padding:.9rem .65rem}
+.evidence-map button.trace-route:is(:hover,:focus-visible):enabled{background:var(--wash);color:var(--ink)}
+.trace-route span:nth-of-type(2){color:var(--print-blue)}
+.trace-route i {position:relative;height:1px;background:var(--strong-rule)}
+.trace-route i:after {content:"";position:absolute;right:0;top:-2px;width:5px;height:5px;border-radius:100%;background:var(--accent)}
+.transfer-list {list-style:none;margin:.8rem 0;padding:0}
+.transfer-list li {display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;padding:.65rem 0;border-top:1px solid var(--rule);overflow-wrap:anywhere}
+.transfer-list li>span {flex:1 1 11rem;min-width:0}
+.transfer-list small {display:block}
+.batch-counts{color:var(--print-blue);font-variant-numeric:tabular-nums}
+@media(prefers-reduced-motion:no-preference){
+.trace-route:is(:hover,:focus-visible) i:after,.transfer-list li[data-running=true]>svg{animation:trace-travel .45s ease-out both}
+@keyframes trace-travel{from{transform:translateX(-.65rem);opacity:.25}to{transform:translateX(0);opacity:1}}
+.dictation-toggle[aria-pressed=true] svg{animation:mic-signal 1s ease-in-out 3}
+@keyframes mic-signal{50%{transform:scale(.84);opacity:.65}}
+}
+
+.trail-criterion small {display:block;color:var(--muted);font:400 .76rem/1.5 var(--sans)}
+.trace-route .trail-criterion {font:400 clamp(1.06rem,2.2vw,1.65rem)/1.16 var(--serif)}
+.trail-source,.trail-decision {display:flex;align-items:center;gap:.4rem;overflow-wrap:anywhere}
+.trail-source svg,.trail-decision svg {flex:none}
+.trail-decision[data-approved=true]{color:var(--success)}
+.evidence-map {border-top:3px solid var(--code-ground)}
+.evidence-map h4 svg {color:var(--print-blue)}
+@media(max-width:550px){.evidence-map button.trace-route{grid-template-columns:minmax(0,1fr) 12px minmax(0,1fr);gap:.45rem}.trace-route .trail-criterion{grid-column:1/-1}.trace-route i:first-of-type{display:none}}

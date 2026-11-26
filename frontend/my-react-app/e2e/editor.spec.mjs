@@ -210,7 +210,48 @@ test("saved code starts a discussion, speech is editable and the confirmed reply
     page.getByRole("textbox", { name: "Python submission" }),
   ).toBeVisible();
   await expect(page.getByText("It tracks the cumulative sum.")).toBeVisible();
-  await expect(page.getByText("Explanation notes", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText("Explanation notes", { exact: true }),
+  ).toBeVisible();
   await expect(page.getByText(/Give an input that illustrates/)).toBeVisible();
   expect(saved).toEqual([{ text: "It tracks the cumulative sum." }]);
+});
+
+test("confirmed dictation inserts once at the cursor and preserves surrounding Python", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    window.SpeechRecognition = class {
+      start() {
+        window.deliver = (phrase, final) => {
+          const segment = [{ transcript: phrase }];
+          segment.isFinal = final;
+          this.onresult({ results: [segment] });
+        };
+      }
+      stop() {
+        this.onend();
+      }
+      abort() {
+        this.onend();
+      }
+    };
+  });
+  await openEditor(page);
+  await page.keyboard.type("leftRight");
+  await page.keyboard.press("Home");
+  for (let i = 0; i < 4; i++) await page.keyboard.press("ArrowRight");
+  await page.getByRole("button", { name: "Voice input" }).click();
+  await page.getByRole("button", { name: "Start dictation" }).click();
+  await page.evaluate(() => {
+    window.deliver("middle", false);
+    window.deliver("middle", true);
+    window.deliver("middle", true);
+  });
+  await page.getByRole("button", { name: "Stop dictation" }).click();
+  await expect(page.getByLabel("Transcript preview")).toHaveValue("middle");
+  await page.getByRole("button", { name: "Insert at cursor" }).click();
+  await expect.poll(() => value(page)).toBe("leftmiddleRight");
+  await page.keyboard.press("ControlOrMeta+z");
+  await expect.poll(() => value(page)).toBe("leftRight");
 });

@@ -1,3 +1,5 @@
+import SpokenAnswer from "./SpokenAnswer";
+import { Mic } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 import {
@@ -36,6 +38,7 @@ export default function PythonEditor({ initial, onChange, onSave, readOnly }) {
     callbacks = useRef({}),
     first = useRef(initial);
   callbacks.current = { onChange, onSave };
+  const [dictating, setDictating] = useState(false);
   const [size, font] = useState(15),
     [tab, setTab] = useState(4),
     [theme, setTheme] = useState("matrix-petrol");
@@ -94,6 +97,15 @@ export default function PythonEditor({ initial, onChange, onSave, readOnly }) {
     <>
       <div className="editor-toolbar">
         <strong>Python</strong>
+        <button
+          className="quiet"
+          type="button"
+          disabled={readOnly}
+          aria-expanded={dictating && !readOnly}
+          onClick={() => setDictating(!dictating)}
+        >
+          <Mic size={16} aria-hidden="true" /> Voice input
+        </button>
         <label>
           Font size
           <select value={size} onChange={(e) => font(Number(e.target.value))}>
@@ -120,6 +132,27 @@ export default function PythonEditor({ initial, onChange, onSave, readOnly }) {
           </select>
         </label>
       </div>
+      {dictating && !readOnly && (
+        <SpokenAnswer
+          editorMode
+          onCancel={() => setDictating(false)}
+          onSave={(text) => {
+            const e = editor.current;
+            const cursor = e.getPosition();
+            e.pushUndoStop();
+            e.executeEdits("dictation", [
+              {
+                range: monaco.Range.fromPositions(cursor),
+                text,
+                forceMoveMarkers: true,
+              },
+            ]);
+            e.pushUndoStop();
+            setDictating(false);
+            e.focus();
+          }}
+        />
+      )}
       <div className="editor" ref={host} />
       <small>
         Enter indents Python blocks automatically. Ctrl/Cmd+S saves a draft.

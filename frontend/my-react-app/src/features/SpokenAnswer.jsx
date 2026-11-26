@@ -1,6 +1,10 @@
 import { Mic, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
+import { browserMonitor } from "./audio";
+
+let speechOwner = null;
+
 const errors = {
   "not-allowed":
     "Microphone permission was denied. Allow it in browser settings or type your answer.",
@@ -11,12 +15,15 @@ const errors = {
     "The browser’s speech service is unavailable. Try again or type your answer.",
 };
 
-export default function SpokenAnswer({ onSave }) {
+export default function SpokenAnswer({ onSave, editorMode = false, onCancel }) {
   const [text, setText] = useState("");
   const [partial, setPartial] = useState("");
   const [listening, listen] = useState(false);
   const [notice, notify] = useState("");
   const [saving, saveBusy] = useState(false);
+  const [started, setStarted] = useState(false);
+  const [level, setLevel] = useState(null);
+  const monitor = useRef(null);
   const active = useRef(null);
   const timer = useRef();
   const Recognition =
@@ -26,7 +33,12 @@ export default function SpokenAnswer({ onSave }) {
       clearTimeout(timer.current);
       const r = active.current;
       active.current = null;
+      if (speechOwner === r) speechOwner = null;
       if (r) r.abort();
+      if (monitor.current) {
+        monitor.current.notify = () => {};
+        monitor.current.dispose();
+      }
     },
     [],
   );
@@ -36,15 +48,31 @@ export default function SpokenAnswer({ onSave }) {
       active.current.stop();
       return;
     }
+    if (speechOwner) {
+      notify("Stop the other dictation before starting this one.");
+      return;
+    }
     notify("");
     try {
       const r = new Recognition();
       active.current = r;
+      speechOwner = r;
       r.lang = navigator.language?.startsWith("en")
         ? navigator.language
         : "en-IN";
       r.continuous = true;
       r.interimResults = true;
+      r.onstart = () => {
+        if (active.current !== r) return;
+        setStarted(true);
+        if (editorMode) {
+          const meter = browserMonitor((s) =>
+            setLevel(s.running ? s.level : null),
+          );
+          monitor.current = meter;
+          void meter.start();
+        }
+      };
       let nextFinal = 0;
       r.onresult = (event) => {
         if (active.current !== r) return;
@@ -74,7 +102,12 @@ export default function SpokenAnswer({ onSave }) {
         if (active.current !== r) return;
         clearTimeout(timer.current);
         active.current = null;
+        if (speechOwner === r) speechOwner = null;
         setPartial("");
+        monitor.current?.dispose();
+        monitor.current = null;
+        setStarted(false);
+        setLevel(null);
         listen(false);
       };
       r.start();
@@ -83,6 +116,7 @@ export default function SpokenAnswer({ onSave }) {
         if (active.current === r) r.stop();
       }, 60000);
     } catch {
+      if (speechOwner === active.current) speechOwner = null;
       active.current = null;
       listen(false);
       notify(
@@ -94,7 +128,7 @@ export default function SpokenAnswer({ onSave }) {
   return (
     <div className="spoken-answer">
       <label>
-        Your explanation
+        {editorMode ? "Transcript preview" : "Your explanation"}
         <textarea
           rows={4}
           maxLength={3000}
@@ -103,6 +137,11 @@ export default function SpokenAnswer({ onSave }) {
           onChange={(e) => setText(e.target.value)}
         />
       </label>
+      {started && level !== null && (
+        <label>
+          Input level <meter min="0" max="1" value={level} />
+        </label>
+      )}
       {partial && <p className="muted">{partial}</p>}
       {Recognition && window.isSecureContext ? (
         <small>
@@ -121,7 +160,7 @@ export default function SpokenAnswer({ onSave }) {
             type="button"
             className="quiet dictation-toggle"
             disabled={saving}
-            aria-pressed={listening}
+            aria-pressed={started}
             onClick={dictate}
           >
             {listening ? (
@@ -129,7 +168,11 @@ export default function SpokenAnswer({ onSave }) {
             ) : (
               <Mic aria-hidden="true" size={17} />
             )}
-            {listening ? "Stop dictation" : "Dictate answer"}
+            {listening
+              ? "Stop dictation"
+              : editorMode
+                ? "Start dictation"
+                : "Dictate answer"}
           </button>
         )}
         <button
@@ -139,7 +182,7 @@ export default function SpokenAnswer({ onSave }) {
             saveBusy(true);
             notify("");
             try {
-              await onSave(text.trim());
+              await onSave(editorMode ? text : text.trim());
             } catch (e) {
               notify(e.message);
             } finally {
@@ -147,13 +190,24 @@ export default function SpokenAnswer({ onSave }) {
             }
           }}
         >
-          {saving ? "Saving…" : "Save explanation"}
+          {saving
+            ? "Saving…"
+            : editorMode
+              ? "Insert at cursor"
+              : "Save explanation"}
         </button>
       </div>
+      {editorMode && (
+        <button type="button" className="quiet" onClick={onCancel}>
+          Cancel dictation
+        </button>
+      )}
       <small role="status">
         {notice ||
           (listening
-            ? "Microphone active · listening…"
+            ? started
+              ? "Microphone active · listening…"
+              : "Starting microphone…"
             : text.length === 3000
               ? "3,000-character answer limit reached."
               : "")}

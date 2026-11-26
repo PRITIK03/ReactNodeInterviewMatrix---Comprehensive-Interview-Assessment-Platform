@@ -108,6 +108,8 @@ def test_sharing_is_explicit_scoped_revocable_and_expires(site):
         and recruiter.get(shared).json() == []
     )
     assert candidate.put(url, json={"shared": True}).is_success
+    assert recruiter.get(shared, params={"attempt": "unrelated"}).json() == []
+    assert recruiter.get(shared, params={"attempt": attempt, "question": question}).json() == recruiter.get(shared).json()
     with db(True) as c:
         c.execute(
             "UPDATE assessment_attempt SET started=? WHERE id=?",
