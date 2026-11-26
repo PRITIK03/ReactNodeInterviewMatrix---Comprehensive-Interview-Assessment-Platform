@@ -22,7 +22,7 @@ That question refers to a function in the saved solution below. Select **Dictate
 
 ![A saved line of Python, its follow-up question, the confirmed answer and the passages used for coaching](docs/images/screening-debrief.webp)
 
-**Come back after submission.** Each public and hidden test runs in a fresh, resource-limited Python/WASI guest. **Your attempts → Open** brings back the score, individual verdicts and discussion. Coaching has no weight in the score. For a completed company assignment, the candidate chooses which explanations the recruiter can read and can withdraw access later.
+**Come back after submission.** Each public and hidden test runs in a fresh, resource-limited Python/WASI guest. **Your attempts → Open** brings back the score, individual verdicts and discussion. Coaching has no weight in the score. For a completed company assignment, the candidate chooses which explanations the recruiter can read and can withdraw access later. [View a graded Python attempt](docs/images/assessment-result.webp)
 
 ### At the recruiter’s desk
 

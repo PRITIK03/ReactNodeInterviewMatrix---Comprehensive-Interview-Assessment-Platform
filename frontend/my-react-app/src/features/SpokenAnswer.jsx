@@ -1,3 +1,4 @@
+import { Mic, Square } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 const errors = {
@@ -118,12 +119,17 @@ export default function SpokenAnswer({ onSave }) {
         {Recognition && window.isSecureContext && (
           <button
             type="button"
-            className="quiet"
+            className="quiet dictation-toggle"
             disabled={saving}
             aria-pressed={listening}
             onClick={dictate}
           >
-            {listening ? "Stop dictation" : "🎙 Dictate answer"}
+            {listening ? (
+              <Square aria-hidden="true" size={15} />
+            ) : (
+              <Mic aria-hidden="true" size={17} />
+            )}
+            {listening ? "Stop dictation" : "Dictate answer"}
           </button>
         )}
         <button

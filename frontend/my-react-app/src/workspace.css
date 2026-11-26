@@ -1877,3 +1877,209 @@ button[data-stage][aria-pressed="true"] {
   overflow: hidden;
   clip-path: inset(50%);
 }
+
+.result-sheet {
+  margin: 1.25rem 0;
+}
+.result-imprint {
+  display: grid;
+  grid-template-columns: 1fr minmax(12rem, 0.46fr);
+  align-items: center;
+  gap: clamp(1rem, 4vw, 4.5rem);
+  padding: clamp(1.25rem, 3vw, 2.5rem);
+  color: var(--code-ink);
+  background: var(--code-ground);
+  border-inline-start: 5px solid #dfb677;
+}
+.result-identity > svg {
+  color: #edc58a;
+}
+.result-identity h3,
+.result-tally strong {
+  color: inherit;
+  font: 400 clamp(2.1rem, 4.5vw, 4rem)/1.06 var(--serif);
+  letter-spacing: -0.035em;
+}
+.result-identity h3 {
+  margin: 0.3rem 0;
+}
+.result-identity small,
+.result-tally span {
+  color: #d7e3df;
+}
+.result-identity code {
+  font-size: 0.86em;
+}
+.result-tally {
+  border-inline-start: 1px solid #729098;
+  padding-inline-start: clamp(1.1rem, 3vw, 3rem);
+}
+.result-tally strong,
+.result-tally span {
+  display: block;
+  font-variant-numeric: tabular-nums;
+}
+.tally-track {
+  height: 6px;
+  margin-top: 0.7rem;
+  background: #496973;
+}
+.tally-track i {
+  height: 100%;
+  display: block;
+  background: #eed29d;
+  transform-origin: left;
+  transform: scaleX(var(--fraction));
+}
+.execution-record {
+  padding-block: 1.2rem 0.5rem;
+}
+.execution-record > label {
+  max-width: 44rem;
+}
+.execution-record select {
+  width: 100%;
+  min-width: 0;
+  text-overflow: ellipsis;
+}
+.execution-record h4,
+.verdict-strip :is(small, span) {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+.execution-record h4 {
+  margin: 1.4rem 0 0.6rem;
+}
+.verdict-strip {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+  gap: 1px;
+  border: 1px solid var(--rule);
+  background: var(--rule);
+}
+.verdict-strip li {
+  flex: 1 0 min(9.5rem, 100%);
+  list-style: none;
+  padding: 0.8rem;
+  background: var(--surface);
+}
+.verdict-strip li > span {
+  margin-top: 0.3rem;
+  font-weight: 650;
+  color: var(--error);
+}
+.verdict-strip li[data-passed="true"] > span {
+  color: var(--success);
+}
+.verdict-strip svg {
+  flex: none;
+}
+.submitted-source {
+  margin: 0.85rem 0 0;
+}
+.submitted-source summary svg {
+  vertical-align: middle;
+  margin-inline: 0.25rem;
+}
+.submitted-source pre {
+  max-height: 24rem;
+  overflow: auto;
+  white-space: pre;
+  color: var(--code-ink);
+  background: var(--code-ground);
+  padding: 1rem;
+}
+@media (max-width: 620px) {
+  .result-imprint {
+    grid-template-columns: 1fr;
+  }
+  .result-tally {
+    border: 0;
+    border-top: 1px solid #729098;
+    padding: 0.85rem 0 0;
+  }
+  .execution-record > label {
+    min-width: 0;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .tally-track i {
+    animation: record-score 380ms var(--motion-settle) both;
+  }
+  @keyframes record-score {
+    from {
+      transform: scaleX(0);
+    }
+  }
+}
+
+.discussion-controls {
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  border: 0;
+}
+.dictation-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.dictation-toggle[aria-pressed="true"] {
+  color: var(--error);
+  background: var(--error-wash);
+  border-color: var(--error);
+}
+.dictation-toggle[aria-pressed="true"] svg {
+  fill: currentColor;
+}
+
+.weight-sheet {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: baseline;
+  gap: 0.55rem 1rem;
+  padding: 1rem;
+  background: var(--wash);
+  border-top: 2px solid var(--strong-rule);
+}
+.weight-sheet h4,
+.weight-sheet small {
+  margin: 0;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.weight-sheet strong {
+  font: 400 2rem/1 var(--serif);
+  font-variant-numeric: tabular-nums;
+}
+.weight-sheet small,
+.weight-allocation {
+  grid-column: 1/-1;
+}
+.weight-allocation {
+  display: flex;
+  height: 0.55rem;
+  background: var(--rule);
+  overflow: hidden;
+}
+.weight-allocation i {
+  background: var(--print-blue);
+}
+.weight-allocation i:nth-child(3n + 2) {
+  background: var(--print-rust);
+}
+.weight-allocation i:nth-child(3n) {
+  background: var(--print-brass);
+}
+.weight-allocation i + i {
+  box-shadow: inset 2px 0 var(--wash);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .weight-allocation i {
+    transition: flex-basis 160ms var(--motion-settle);
+  }
+}

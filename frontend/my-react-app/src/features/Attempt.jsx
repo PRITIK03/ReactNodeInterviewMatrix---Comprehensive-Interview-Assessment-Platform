@@ -1,19 +1,28 @@
-import React, { lazy, Suspense, useEffect, useState } from "react";
+import React, { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { api, date } from "./client";
-import { Status, Score, Form } from "./ui";
+import { Status, Form } from "./ui";
 import CodeDiscussion from "./CodeDiscussion";
+import AssessmentResult from "./AssessmentResult";
 const Editor = lazy(() => import("./PythonEditor"));
 export default function Attempt({ item: a, refresh, leave }) {
   const cacheKey = "matrix-draft/" + a.id + "/" + a.version;
   const [initialTime] = useState(() => a.server_now ?? Date.now() / 1000);
+  const [serverAnswers, setServerAnswers] = useState(a.answers);
   const [values, set] = useState(() => {
       try {
-        return a.status === "open" && a.expires > initialTime
-          ? {
-              ...a.answers,
-              ...JSON.parse(sessionStorage.getItem(cacheKey) || "{}"),
-            }
-          : a.answers;
+        if (a.status !== "open" || a.expires <= initialTime) return a.answers;
+        const cached = JSON.parse(sessionStorage.getItem(cacheKey) || "{}");
+        const recovered = { ...a.answers };
+        for (const question of a.questions) {
+          const draft = cached?.[question.id];
+          if (
+            typeof draft === "string" &&
+            (!question.options || question.options.includes(draft))
+          ) {
+            recovered[question.id] = draft;
+          }
+        }
+        return recovered;
       } catch {
         return a.answers;
       }
@@ -48,9 +57,14 @@ export default function Attempt({ item: a, refresh, leave }) {
       document.removeEventListener("visibilitychange", synchronize);
     };
   }, [a.id, a.status, a.server_now, initialTime, refresh]);
+  const edits = useRef(0);
+  const saving = useRef(false);
+  const [draftPending, setDraftPending] = useState(false);
+  const [submission, setSubmission] = useState("idle");
   const q = a.questions[index],
     key = "/attempts/" + a.id,
     writable = a.status === "open" && a.expires > clock;
+  const editing = writable && submission === "idle";
   const remainingQuestions = a.questions.filter(
     (item) => !values[item.id]?.trim(),
   ).length;
@@ -63,25 +77,55 @@ export default function Attempt({ item: a, refresh, leave }) {
       .map(([question_id, value]) => ({ question_id, value }));
   useEffect(() => {
     try {
-      if (writable) sessionStorage.setItem(cacheKey, JSON.stringify(values));
+      const changes = Object.entries(values).filter(
+        ([id, value]) => value !== (serverAnswers[id] ?? ""),
+      );
+      if (writable && changes.length)
+        sessionStorage.setItem(
+          cacheKey,
+          JSON.stringify(Object.fromEntries(changes)),
+        );
       else sessionStorage.removeItem(cacheKey);
     } catch {
       /* Draft stays in memory. */
     }
-  }, [values, writable, cacheKey]);
+  }, [values, writable, cacheKey, serverAnswers]);
   const save = async () => {
+    if (saving.current || !editing) return;
+    saving.current = true;
+    setDraftPending(true);
+    const revision = edits.current;
     try {
       await api(key + "/draft", "PUT", {
         answers: pack(),
         replace_snapshot: true,
       });
+      setServerAnswers(values);
+      if (revision !== edits.current) return;
       notify("Draft saved on server");
       if (a.kind === "coding" && values[q.id]?.trim()) markSaved({ id: q.id });
-    } catch {
-      notify("Server unavailable. Draft retained in this tab.");
+    } catch (error) {
+      notify(
+        error.status
+          ? error.message
+          : "Could not reach the server. Draft retained in this tab.",
+      );
+    } finally {
+      saving.current = false;
+      setDraftPending(false);
     }
   };
+  async function reconcileSubmission() {
+    try {
+      const snapshot = await api(key + "/clock");
+      if (snapshot.status !== a.status) refresh();
+      else setSubmission("idle");
+    } catch {
+      setSubmission("unconfirmed");
+    }
+  }
   const change = (v) => {
+    edits.current += 1;
     set((prev) => ({ ...prev, [q.id]: v }));
     notify("Unsaved changes");
   };
@@ -93,74 +137,54 @@ export default function Attempt({ item: a, refresh, leave }) {
       <Status>
         {writable ? "in progress" : a.status === "open" ? "expired" : a.status}
       </Status>
-      {a.feedback && (
-        <article>
-          <h3>Skill breakdown</h3>
-          {Object.entries(a.feedback.section_scores).map(([s, v]) => (
-            <div className="skill-result" key={s}>
-              <span>{s}</span>
-              <meter min="0" max="100" value={v} aria-label={s + " correct"} />
-              <strong>{v}%</strong>
-            </div>
-          ))}
-          {a.feedback.recommendations.map((r) => (
-            <p key={r}>{r}</p>
-          ))}
-        </article>
-      )}
-      {a.status === "complete" && a.kind === "coding" && (
-        <details>
-          <summary>Optional code coaching</summary>
-          <Form
-            label="Request feedback"
-            submit={async () =>
-              setAdvice(
-                await api(key + "/coaching", "POST", { share_source: true }),
-              )
-            }
-          >
-            <label className="option">
-              <input type="checkbox" required />
-              Share my first solution with Gemini for practice feedback.
-            </label>
-          </Form>
-          {advice && (
-            <p>
-              {advice.observation} {advice.next_step}
-            </p>
-          )}
-        </details>
-      )}
       {a.status === "complete" ? (
         <>
-          <h3>Assessment result</h3>
-          <Score {...a} />
-          <p>
-            Server-graded against assessment version{" "}
-            <code>{a.version.slice(0, 12)}</code>.
-          </p>
-          {a.kind === "coding" && (
-            <label>
-              Solution to discuss
-              <select
-                value={index}
-                onChange={(e) => select(Number(e.target.value))}
-              >
-                {a.questions.map((item, i) => (
-                  <option value={i} key={item.id}>
-                    {i + 1}. {item.prompt}
-                  </option>
-                ))}
-              </select>
-            </label>
+          <AssessmentResult attempt={a} index={index} select={select} />
+          {a.feedback && (
+            <article>
+              <h3>Skill breakdown</h3>
+              {Object.entries(a.feedback.section_scores).map(([s, v]) => (
+                <div className="skill-result" key={s}>
+                  <span>{s}</span>
+                  <meter
+                    min="0"
+                    max="100"
+                    value={v}
+                    aria-label={s + " correct"}
+                  />
+                  <strong>{v}%</strong>
+                </div>
+              ))}
+              {a.feedback.recommendations.map((r) => (
+                <p key={r}>{r}</p>
+              ))}
+            </article>
           )}
-          {a.case_results.map((r, i) => (
-            <p key={i}>
-              Question {a.questions.findIndex((q) => q.id === r.question) + 1} ·{" "}
-              {r.hidden ? "Hidden test" : "Public example"} {r.position + 1}{" "}
-              <Status>{r.status}</Status>
-            </p>
-          ))}
+          {a.status === "complete" && a.kind === "coding" && (
+            <details>
+              <summary>Optional code coaching</summary>
+              <Form
+                label="Request feedback"
+                submit={async () =>
+                  setAdvice(
+                    await api(key + "/coaching", "POST", {
+                      share_source: true,
+                    }),
+                  )
+                }
+              >
+                <label className="option">
+                  <input type="checkbox" required />
+                  Share my first solution with Gemini for practice feedback.
+                </label>
+              </Form>
+              {advice && (
+                <p>
+                  {advice.observation} {advice.next_step}
+                </p>
+              )}
+            </details>
+          )}
         </>
       ) : (
         <>
@@ -168,13 +192,15 @@ export default function Attempt({ item: a, refresh, leave }) {
             <span>
               Question <strong>{index + 1}</strong> of {a.questions.length}
             </span>
-            <span className="time-left" data-urgent={seconds <= 60}>
-              <time title={"Deadline " + date(a.expires)}>
-                {Math.floor(seconds / 60)}:
-                {String(seconds % 60).padStart(2, "0")}
-              </time>{" "}
-              remaining
-            </span>
+            {a.status === "open" && (
+              <span className="time-left" data-urgent={seconds <= 60}>
+                <time title={"Deadline " + date(a.expires)}>
+                  {Math.floor(seconds / 60)}:
+                  {String(seconds % 60).padStart(2, "0")}
+                </time>{" "}
+                remaining
+              </span>
+            )}
           </div>
           {writable && remainingQuestions > 0 && a.questions.length > 1 && (
             <small className="pace-note">
@@ -193,7 +219,7 @@ export default function Attempt({ item: a, refresh, leave }) {
                 onClick={() => select(i)}
               >
                 {i + 1}
-                {values[x.id] ? " ✓" : ""}
+                {values[x.id]?.trim() ? " ✓" : ""}
               </button>
             ))}
           </nav>
@@ -205,7 +231,8 @@ export default function Attempt({ item: a, refresh, leave }) {
                 <label key={opt} className="option answer-option">
                   <input
                     type="radio"
-                    disabled={!writable}
+                    name={"answer-" + q.id}
+                    disabled={!editing}
                     checked={values[q.id] === opt}
                     onChange={() => change(opt)}
                   />
@@ -237,6 +264,7 @@ export default function Attempt({ item: a, refresh, leave }) {
                       initial={values[q.id] || ""}
                       onChange={change}
                       onSave={save}
+                      readOnly={!editing}
                     />
                   </Suspense>
                 ) : (
@@ -246,18 +274,45 @@ export default function Attempt({ item: a, refresh, leave }) {
             </div>
           )}
           {writable && (
-            <button className="quiet" onClick={save}>
-              Save draft
+            <button
+              className="quiet"
+              onClick={save}
+              disabled={draftPending || !editing}
+            >
+              {draftPending ? "Saving…" : "Save draft"}
             </button>
           )}{" "}
           <span role="status">{notice}</span>
+          {submission === "unconfirmed" && (
+            <div role="status">
+              Submission status is unknown. Reconnect to check before editing.
+              <button className="quiet" onClick={reconcileSubmission}>
+                Check submission status
+              </button>
+            </div>
+          )}
           {(writable ||
             a.status === "runner_unavailable" ||
             a.status === "grading") && (
             <Form
-              label="Submit for scoring"
+              label={
+                a.status === "runner_unavailable"
+                  ? "Retry grading"
+                  : a.status === "grading"
+                    ? "Check grading"
+                    : "Submit for scoring"
+              }
+              disabled={
+                draftPending || submission !== "idle" || remainingQuestions > 0
+              }
               submit={async () => {
-                await api(key + "/submit", "POST", { answers: pack() });
+                setSubmission("submitting");
+                try {
+                  await api(key + "/submit", "POST", { answers: pack() });
+                } catch (error) {
+                  await reconcileSubmission();
+                  throw error;
+                }
                 try {
                   sessionStorage.removeItem(cacheKey);
                 } catch {
@@ -267,24 +322,32 @@ export default function Attempt({ item: a, refresh, leave }) {
               }}
             >
               <p>
-                {pack().length} of {a.questions.length} answered. Submission
-                locks your answers.
+                {a.status === "runner_unavailable"
+                  ? "Your submitted answers are saved. Retry the same submission when the runner is available."
+                  : a.status === "grading"
+                    ? "Your submitted answers are locked while the runner checks them."
+                    : `${a.questions.length - remainingQuestions} of ${a.questions.length} answered. Submission locks your answers.`}
               </p>
             </Form>
           )}
         </>
       )}
       {a.kind === "coding" && (
-        <CodeDiscussion
-          key={a.id + "/" + q.id}
-          attempt={a.id}
-          question={q.id}
-          source={a.status === "complete" ? a.answers[q.id] : values[q.id]}
-          completed={a.status === "complete"}
-          readOnly={!writable && a.status !== "complete"}
-          assigned={Boolean(a.invitation)}
-          saved={savedQuestion?.id === q.id ? savedQuestion : 0}
-        />
+        <fieldset
+          className="discussion-controls"
+          disabled={submission !== "idle"}
+        >
+          <CodeDiscussion
+            key={a.id + "/" + q.id}
+            attempt={a.id}
+            question={q.id}
+            source={a.status === "complete" ? a.answers[q.id] : values[q.id]}
+            completed={a.status === "complete"}
+            readOnly={!writable && a.status !== "complete"}
+            assigned={Boolean(a.invitation)}
+            saved={savedQuestion?.id === q.id ? savedQuestion : 0}
+          />
+        </fieldset>
       )}
     </section>
   );

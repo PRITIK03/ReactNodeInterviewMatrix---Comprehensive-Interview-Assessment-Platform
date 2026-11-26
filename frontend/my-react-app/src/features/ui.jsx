@@ -70,14 +70,14 @@ export function Field({ label, children }) {
     </label>
   );
 }
-export function Form({ submit, label, children }) {
+export function Form({ submit, label, children, disabled = false }) {
   const [busy, set] = useState(false),
     [err, fail] = useState("");
   return (
     <form
       onSubmit={async (e) => {
         e.preventDefault();
-        if (busy) return;
+        if (busy || disabled) return;
         const f = e.currentTarget;
         const fields = Object.fromEntries(new FormData(f));
         set(true);
@@ -93,7 +93,7 @@ export function Form({ submit, label, children }) {
     >
       {children}
       {err && <p role="alert">{err}</p>}
-      <button disabled={busy}>{busy ? "Working…" : label}</button>
+      <button disabled={busy || disabled}>{busy ? "Working…" : label}</button>
     </form>
   );
 }

@@ -23,6 +23,8 @@ The candidate and recruiter workspaces share a horizontal index. The practice li
 | Real states | An unauthorized session opens sign-in. An unavailable workspace offers retry. The library distinguishes loading, empty and available tracks. Disabled actions, saved replies and expiring attempts have distinct states. |
 | Motion and input | Section artwork moves slightly as its heading scrolls on browsers with view-timeline support. Hover and focus transitions stay local to controls. Reduced-motion mode removes animations and transitions. A skip link, focus outlines and native inputs support keyboard navigation. |
 
+The result screen pairs the selected submitted program with its own stored case verdicts. The recruiter rubric editor shows the allocation by criterion and the percentage still to assign or remove.
+
 The attempt API returns server time alongside its deadline. The worksheet measures elapsed time locally and checks the private attempt clock when a background tab returns. A pace hint divides the remaining time by the number of unanswered questions. The server validates every deadline-sensitive write. After an ambiguous start response, retrying the same selection within the workspace reuses its request key.
 
 ## Practice formats and workspace reporting
@@ -111,7 +113,7 @@ See the [evaluation and readiness architecture](architecture/evaluation-and-read
 | --- | --- |
 | Backend and API | 40 tests passed on SQLite, with one PostgreSQL-only case skipped. All 41 passed on a disposable PostgreSQL instance, including the snapshot import. |
 | Evaluation quality | Golden schema and arithmetic cases passed. All seven deliberately invalid model responses were rejected. A provider failure produced zero additional scorecards. The human-agreement metric is unavailable without independent labels. |
-| Frontend | 13 component and audio-controller tests passed. 12 Chromium browser tests passed on Monaco typing, indentation, undo/redo, paste, resizing, draft recovery, code discussions with editable dictation and local audio playback. Speech recognition events were simulated for repeatability. |
+| Frontend | 17 component and audio-controller tests passed. 14 Chromium browser tests passed on Monaco typing, indentation, undo/redo, paste, resizing, draft recovery, code discussions with editable dictation and local audio playback. Speech recognition events were simulated for repeatability. |
 | Integrated demo | The rehearsal used real private S3-compatible storage, the OS scanner, Celery, the parser, the assigned assessment and a human-reviewed scorecard. Original document deletion completed. A separate company-assigned Python rehearsal graded five real cases, restored a confirmed dictated reply and its coaching notes after reload, and verified recruiter sharing and withdrawal. The dictation input was simulated. |
 | Build and dependency checks | Vite production build and ESLint passed. npm audit and pip-audit reported no known advisories in the checked frontend tree and backend dependency resolution. Monaco remains a large lazy-loaded bundle. |
 | Repository | Six repository-safeguard tests passed. Historical inspection found one reachable environment blob matching a provider credential signature. Credential rotation must be confirmed with the provider. |

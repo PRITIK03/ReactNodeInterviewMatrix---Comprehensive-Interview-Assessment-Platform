@@ -30,7 +30,7 @@ monaco.editor.defineTheme("matrix-petrol", {
     "editorCursor.foreground": "#F2CA83",
   },
 });
-export default function PythonEditor({ initial, onChange, onSave }) {
+export default function PythonEditor({ initial, onChange, onSave, readOnly }) {
   const host = useRef(null),
     editor = useRef(null),
     callbacks = useRef({}),
@@ -85,11 +85,11 @@ export default function PythonEditor({ initial, onChange, onSave }) {
     };
   }, []);
   useEffect(() => {
-    editor.current?.updateOptions({ fontSize: size, theme });
+    editor.current?.updateOptions({ fontSize: size, theme, readOnly });
     editor.current
       ?.getModel()
       ?.updateOptions({ tabSize: tab, insertSpaces: true });
-  }, [size, tab, theme]);
+  }, [size, tab, theme, readOnly]);
   return (
     <>
       <div className="editor-toolbar">

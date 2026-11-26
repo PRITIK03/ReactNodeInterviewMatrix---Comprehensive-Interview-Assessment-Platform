@@ -1,3 +1,4 @@
+import { Check, SlidersHorizontal } from "lucide-react";
 import { useResource } from "./useResource";
 import React, { useState } from "react";
 import { api } from "./client";
@@ -36,7 +37,8 @@ function Assignments({ jobVersion, versions, revision, reload }) {
           <select name="assessment">
             {versions.map((v) => (
               <option key={v.id} value={v.id}>
-                {v.company} · {v.level} · {v.kind} · {v.minutes} min · {v.id.slice(0, 8)}
+                {v.company} · {v.level} · {v.kind} · {v.minutes} min ·{" "}
+                {v.id.slice(0, 8)}
               </option>
             ))}
           </select>
@@ -57,6 +59,10 @@ export default function Recruiter({ revision, reload, versions }) {
       "/candidates?search=" + encodeURIComponent(search) + "&offset=" + offset,
       revision,
     );
+  const totalWeight = weights.reduce(
+    (sum, criterion) => sum + criterion.weight,
+    0,
+  );
   function field(index, key, value) {
     setWeights((items) =>
       items.map((w, i) => (i === index ? { ...w, [key]: value } : w)),
@@ -115,6 +121,7 @@ export default function Recruiter({ revision, reload, versions }) {
         >
           <Form
             label="Save version"
+            disabled={totalWeight !== 100}
             submit={async (f) => {
               await api(
                 edit.id ? "/jobs/" + edit.job + "/versions" : "/jobs",
@@ -141,7 +148,35 @@ export default function Recruiter({ revision, reload, versions }) {
                 <option>published</option>
               </select>
             </Field>
-            <h4>Evaluation criteria</h4>
+            <div className="weight-sheet">
+              <h4>
+                <SlidersHorizontal size={16} aria-hidden="true" /> Evaluation
+                criteria
+              </h4>
+              <strong>{totalWeight}%</strong>
+              <div className="weight-allocation" aria-hidden="true">
+                {weights.map((w, i) => (
+                  <i
+                    key={i}
+                    style={{
+                      flexBasis:
+                        (100 * w.weight) / Math.max(100, totalWeight) + "%",
+                    }}
+                  />
+                ))}
+              </div>
+              <small role="status">
+                {totalWeight === 100 ? (
+                  <>
+                    <Check size={14} aria-hidden="true" /> Fully allocated
+                  </>
+                ) : totalWeight < 100 ? (
+                  `Assign ${100 - totalWeight} more percentage point${totalWeight === 99 ? "" : "s"}.`
+                ) : (
+                  `Reduce weights by ${totalWeight - 100} percentage point${totalWeight === 101 ? "" : "s"}.`
+                )}
+              </small>
+            </div>
             {weights.map((w, i) => (
               <fieldset key={i} className="rubric-entry">
                 <legend>Criterion {i + 1}</legend>
@@ -226,6 +261,7 @@ export default function Recruiter({ revision, reload, versions }) {
                 </label>
                 <button
                   type="button"
+                  disabled={weights.length === 1}
                   onClick={() => setWeights(weights.filter((_, j) => i !== j))}
                 >
                   Remove
@@ -235,13 +271,11 @@ export default function Recruiter({ revision, reload, versions }) {
             <button
               type="button"
               className="quiet"
+              disabled={weights.length >= 20}
               onClick={() => setWeights([...weights, { name: "", weight: 1 }])}
             >
               Add criterion
             </button>
-            <p>
-              Total weight {weights.reduce((s, w) => s + w.weight, 0)} / 100
-            </p>
           </Form>
         </Dialog>
       )}
