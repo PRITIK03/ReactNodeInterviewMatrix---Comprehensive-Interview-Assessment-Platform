@@ -24,7 +24,7 @@ In a candidate account, choose a company collection, track and level. The proble
 
 In a recruiter account, filter applications by current stage. Open one to inspect an assessment result and resume evidence against the published job criteria. Accept or override an individual finding and record the reason for the final disposition. The screenshots use synthetic records. [Review walkthrough and release guide](docs/release.md) · [Evaluation architecture](docs/architecture/evaluation-and-readiness.md)
 
-![Organization-scoped recruiter pipeline with stage counts and six synthetic applications](docs/images/recruiter-pipeline.webp)
+![Organization-scoped recruiter pipeline with four stages and four fictional applications](docs/images/recruiter-pipeline.webp)
 
 ## Run locally on Windows x64
 
@@ -74,9 +74,11 @@ The interface ships with company wordmarks and Lucide icons. A local development
 
 In **Practice library**, choose a company, open **Python coding**, then start a level. Type `for item in items:`, press Enter, type `if item:` and press Enter again. Monaco places the cursor four spaces deeper for each block by default. The indent-width control also supports two or eight spaces.
 
-Save the draft or choose **Ask about my code**. The discussion cites a line from the saved solution. Answer in the text box or select **Dictate answer**, speak, stop and edit the transcript. **Save explanation** confirms the text. Reopen the attempt to see the response and ask a different question. Each solution supports four questions. The conversation is optional and independent of timed grading.
+Save the draft or choose **Ask about my code**. The discussion cites a line from the saved solution. Answer in the text box or select **Dictate answer**, speak, stop and edit the transcript. **Save explanation** confirms the text. Reopen the attempt to see the response and ask a different question. Each solution supports four questions. Local feedback highlights code names and quotes wording that signals a reason, example or trade-off. It suggests a next step. This wording check cannot establish whether the explanation is technically correct.
 
-Local practice questions work without a key. For model-generated questions, configure `MATRIX_REVIEW_MODEL` and `MATRIX_REVIEW_KEY` in the backend process and select **Use Gemini** before requesting the question. This sends identifiers, operators and line numbers from selected statements. Comments, literals, spoken audio and explanations are excluded from the model request. The browser may use its own remote speech service after the candidate starts dictation. Microphone dictation needs browser support and HTTPS or localhost. Typing works independently. [Browser speech recognition support](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)
+The runner grades the submitted Python immediately. Return to **Your attempts → Open** to see the stored score, verdicts and discussion later. On a completed company assignment, the candidate can share an individual question, cited line and confirmed answer with the recruiter or withdraw access. Recruiters open **Applications → Open → Shared coding explanations**. Coaching notes stay private and have no effect on the score. Discussion records have a 90-day retention window. [See a saved explanation and its feedback](docs/images/screening-debrief.webp)
+
+Local practice questions work without a key. For model-generated questions, configure `MATRIX_REVIEW_MODEL` and `MATRIX_REVIEW_KEY` in the backend process and select **Use Gemini** before requesting the question. This sends identifiers, operators and line numbers from selected statements. The question request excludes comments, literals, audio and answers. A separate feedback button sends the confirmed answer, question and code structure to Gemini. The server validates a quoted passage against the saved reply before storing model feedback. The browser may use its own remote speech service after the candidate starts dictation. Microphone dictation needs browser support and HTTPS or localhost. The readiness screen checks live signal and local playback. Typing works independently. [View the readiness screen](docs/images/microphone-readiness.webp) · [Browser speech recognition support](https://developer.mozilla.org/en-US/docs/Web/API/SpeechRecognition)
 
 ## Resume evidence and deletion
 

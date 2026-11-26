@@ -25,7 +25,97 @@ const contours = Array.from({ length: 64 }, (_, i) => {
   };
 });
 
-export function SignalPrint() {
+function fieldArtwork(area) {
+  if (area === "Readiness") {
+    return (
+      <g fill="none" stroke="currentColor">
+        {[30, 80, 130].map((y) => (
+          <path key={y} d={`M0 ${y}H640`} opacity=".19" strokeDasharray="2 7" />
+        ))}
+        {Array.from({ length: 16 }, (_, k) => (
+          <path
+            key={k}
+            opacity={0.42 + k / 35}
+            strokeWidth={1.15}
+            d={Array.from({ length: 240 }, (_, i) => {
+              const x = (i * 640) / 239,
+                t = x / 640;
+              const envelope = 9 + 45 * Math.pow(Math.sin(t * Math.PI), 2);
+              const y =
+                77 +
+                (k - 7.5) * 2.8 +
+                envelope *
+                  Math.sin(t * 19 + k * 0.12) *
+                  Math.cos(t * 5.8 + k * 0.045);
+              return (i ? "L" : "M") + x.toFixed(1) + " " + y.toFixed(1);
+            }).join(" ")}
+          />
+        ))}
+      </g>
+    );
+  }
+  if (area === "Applications" || area === "Jobs") {
+    return (
+      <g
+        transform={
+          area === "Jobs"
+            ? "translate(20 -13) rotate(7 300 80)"
+            : "rotate(-6 320 90)"
+        }
+      >
+        {[0, 1, 2, 3, 4].map((n) => (
+          <g key={n} transform={`translate(${n * 108 - 8} ${24 + n * 8})`}>
+            <path
+              d="M0 24V10Q0 4 7 4H61L76 18H154Q160 18 160 25V160H0Z"
+              fill={["#e6c797", "#dcb786", "#f4dfb5", "#cb9675", "#ecd1aa"][n]}
+              stroke="#916f54"
+            />
+            <path
+              d="M0 34H160M15 55H137M15 65H100M15 95H137M15 105H116"
+              fill="none"
+              stroke="#7a583c"
+              opacity=".48"
+            />
+            <path d="M16 16H46" stroke="#745943" strokeWidth="3" />
+          </g>
+        ))}
+      </g>
+    );
+  }
+  return (
+    <g fill="none" stroke="currentColor" transform="translate(335 80)">
+      {Array.from({ length: 32 }, (_, i) => (
+        <ellipse
+          key={i}
+          rx="129"
+          ry="46"
+          transform={`rotate(${i * 5.625})`}
+          opacity=".56"
+        />
+      ))}
+    </g>
+  );
+}
+const art = Object.fromEntries(
+  ["Readiness", "Applications", "Jobs", "Profile"].map((a) => [
+    a,
+    fieldArtwork(a),
+  ]),
+);
+
+export function SignalPrint({ area = "Assessments" }) {
+  if (area in art)
+    return (
+      <div className="area-print" aria-hidden="true">
+        <svg
+          className="field-art"
+          viewBox="0 0 640 160"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          {art[area]}
+        </svg>
+      </div>
+    );
   return (
     <div className="signal-print" aria-hidden="true">
       <div className="engraving">

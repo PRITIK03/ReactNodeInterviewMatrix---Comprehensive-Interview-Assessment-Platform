@@ -348,6 +348,32 @@ def details(key: str, user=Depends(actor)):
         }
 
 
+@router.get("/applications/{key}/shared-explanations")
+def shared_explanations(
+    key: str,
+    offset: int = Query(0, ge=0),
+    limit: int = Query(50, ge=1, le=100),
+    user=Depends(recruiter),
+):
+    with db() as c:
+        application(c, key, user)
+        return [
+            dict(r)
+            for r in c.execute(
+                """SELECT f.attempt,f.question,f.turn,f.line,f.excerpt,f.prompt,f.reply,r.shared_at,
+                      t.version,aq.position
+               FROM invitation i JOIN application a ON a.id=i.application JOIN candidate p ON p.id=a.candidate
+               JOIN assessment_attempt t ON t.invitation=i.id AND t.owner=p.owner
+               JOIN code_followup f ON f.attempt=t.id
+               JOIN explanation_review r ON r.attempt=f.attempt AND r.question=f.question AND r.turn=f.turn
+               JOIN assessment_question aq ON aq.version=t.version AND aq.question=f.question
+               WHERE i.application=? AND p.org=? AND t.status='complete' AND r.shared_at IS NOT NULL AND t.started>?
+               ORDER BY r.shared_at DESC,t.id,aq.position,f.turn LIMIT ? OFFSET ?""",
+                (key, user["org"], now() - 90 * 86400, limit, offset),
+            )
+        ]
+
+
 @router.post("/applications/{key}/stage")
 def transition(key: str, body: Stage, user=Depends(recruiter)):
     with db(True) as c:

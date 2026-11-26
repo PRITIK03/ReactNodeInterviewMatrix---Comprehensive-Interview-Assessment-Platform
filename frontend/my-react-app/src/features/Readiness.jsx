@@ -33,10 +33,30 @@ export default function Readiness() {
     <section className="preflight">
       <h2>Microphone preflight</h2>
       <p>
-        The level check uses your microphone when you enable it. Recording a
-        four-second playback sample is optional and stays in this tab. Stopping
-        the check discards it.
+        Enable your microphone to check the input level. To verify playback,
+        record a four-second sample and confirm you can hear it. Stopping the
+        check discards the sample.
       </p>
+      <div className="preflight-console" aria-label="Microphone input monitor">
+        <div>
+          <span className="monitor-title">Input monitor</span>
+          <strong>{state.running ? "Listening" : "Standby"}</strong>
+        </div>
+        <div className="meter-display" aria-hidden="true">
+          {Array.from({ length: 24 }, (_, i) => (
+            <i
+              key={i}
+              data-lit={
+                state.running &&
+                state.level > Math.pow(10, (-60 + i * 2.5) / 20)
+              }
+            />
+          ))}
+        </div>
+        <small>
+          {state.running ? "Live microphone level" : "Microphone off"}
+        </small>
+      </div>
       <dl className="checklist">
         <dt>Browser support</dt>
         <dd>

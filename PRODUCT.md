@@ -51,4 +51,4 @@ Use the name **InterviewMatrix**. Write in the language of the task. A candidate
 
 ## Accessibility & Inclusion
 
-Support keyboard use throughout timed assessments. Python indentation, undo and draft recovery help candidates stay focused on solving the problem. Offer typing alongside optional speech input so microphone permissions, hardware and browser support never determine whether someone can answer a follow-up. Communicate status in text, respect reduced motion and make chart values available by keyboard.
+Support keyboard use throughout timed assessments. Python indentation, undo and draft recovery help candidates stay focused on solving the problem. Offer typing alongside optional speech input so microphone permissions, hardware and browser support never determine whether someone can answer a follow-up. Keep a confirmed explanation private until the candidate shares it for a completed assignment. Keep coaching feedback separate from the test verdicts. Communicate status in text, respect reduced motion and make chart values available by keyboard.

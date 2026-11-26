@@ -184,7 +184,12 @@ test("saved code starts a discussion, speech is editable and the confirmed reply
     }
     saved.push(route.request().postDataJSON());
     turns[0].reply = saved[0].text;
-    return route.fulfill({ json: { turn: 1, reply: turns[0].reply } });
+    turns[0].analysis = {
+      identifiers: [],
+      phrases: [],
+      next_step: "Give an input that illustrates the calculation.",
+    };
+    return route.fulfill({ json: turns[0] });
   });
   await page.keyboard.type("total = 0");
   await page.getByRole("button", { name: "Save draft", exact: true }).click();
@@ -205,5 +210,7 @@ test("saved code starts a discussion, speech is editable and the confirmed reply
     page.getByRole("textbox", { name: "Python submission" }),
   ).toBeVisible();
   await expect(page.getByText("It tracks the cumulative sum.")).toBeVisible();
+  await expect(page.getByText("Explanation notes", { exact: true })).toBeVisible();
+  await expect(page.getByText(/Give an input that illustrates/)).toBeVisible();
   expect(saved).toEqual([{ text: "It tracks the cumulative sum." }]);
 });

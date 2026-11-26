@@ -78,6 +78,10 @@ CREATE TABLE IF NOT EXISTS code_followup(
     turn INTEGER NOT NULL CHECK(turn BETWEEN 1 AND 4),source_hash TEXT NOT NULL,line INTEGER NOT NULL,
     excerpt TEXT NOT NULL,prompt TEXT NOT NULL,provider TEXT NOT NULL,reply TEXT,created INTEGER NOT NULL,answered INTEGER,
     PRIMARY KEY(attempt,question,turn));
+CREATE TABLE IF NOT EXISTS explanation_review(
+    attempt TEXT NOT NULL,question TEXT NOT NULL,turn INTEGER NOT NULL,local_result TEXT NOT NULL,
+    model_result TEXT,shared_at INTEGER,PRIMARY KEY(attempt,question,turn),
+    FOREIGN KEY(attempt,question,turn) REFERENCES code_followup(attempt,question,turn) ON DELETE CASCADE);
 CREATE TABLE IF NOT EXISTS grading_lease(attempt TEXT PRIMARY KEY REFERENCES assessment_attempt,nonce TEXT,expires INTEGER);
 CREATE TABLE IF NOT EXISTS code_submission(id TEXT PRIMARY KEY,attempt TEXT REFERENCES assessment_attempt,question TEXT REFERENCES question_version,source TEXT,UNIQUE(attempt,question));
 CREATE TABLE IF NOT EXISTS execution_run(id TEXT PRIMARY KEY,submission TEXT REFERENCES code_submission,engine TEXT,at INTEGER);

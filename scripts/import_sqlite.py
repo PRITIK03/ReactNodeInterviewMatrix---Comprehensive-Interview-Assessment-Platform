@@ -34,6 +34,7 @@ ORDER = (
     "test_case_result",
     "coaching",
     "code_followup",
+    "explanation_review",
     "resume",
     "correction",
     "processing_event",

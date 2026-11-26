@@ -16,14 +16,14 @@ The candidate and recruiter workspaces share a horizontal index. The practice li
 
 | Review | Applied decision and verification |
 | --- | --- |
-| Visual identity | Mist-gray canvas, warm paper, vermilion actions, ochre aptitude and petrol-blue coding covers. The title band carries an original two-color contour print. Logo files and fonts resolve locally. |
+| Visual identity | Mist-gray canvas, warm paper, vermilion actions, ochre aptitude and petrol-blue coding covers. The library carries a contour print, applications use layered file folders, and readiness uses acoustic waves above a live input meter. Logo files and fonts resolve locally. |
 | Hierarchy and density | One level of covers in the library. Hairlines separate sections, criteria, citations and history. Empty tables omit their headers, and short lists omit pagination. |
 | Typography | The font assets ship in the build. Form labels stay visible while filled. Time and scoring remain readable at narrow widths. |
 | Color | The paired body, muted, primary-action and status text colors each exceed 6:1 against their intended surfaces. Text, symbols and labels communicate state alongside color. These measurements cover the specified pairs. |
 | Real states | An unauthorized session opens sign-in. An unavailable workspace offers retry. The library distinguishes loading, empty and available tracks. Disabled actions, saved replies and expiring attempts have distinct states. |
-| Motion and input | The header print settles after 2.8 seconds. Hover and focus transitions stay local to controls. Reduced-motion mode removes animations and transitions. A skip link, focus outlines and native inputs support keyboard navigation. |
+| Motion and input | Section artwork moves slightly as its heading scrolls on browsers with view-timeline support. Hover and focus transitions stay local to controls. Reduced-motion mode removes animations and transitions. A skip link, focus outlines and native inputs support keyboard navigation. |
 
-The attempt API returns server time alongside its deadline. The worksheet measures elapsed time locally and checks the private attempt clock when a background tab returns. The server validates every deadline-sensitive write. After an ambiguous start response, retrying the same selection within the workspace reuses its request key.
+The attempt API returns server time alongside its deadline. The worksheet measures elapsed time locally and checks the private attempt clock when a background tab returns. A pace hint divides the remaining time by the number of unanswered questions. The server validates every deadline-sensitive write. After an ambiguous start response, retrying the same selection within the workspace reuses its request key.
 
 ## Practice formats and workspace reporting
 
@@ -48,6 +48,9 @@ Recruiter stage buttons count each application once in its current stage across 
 | Allow or withdraw external evaluation | `PUT /applications/{id}/evaluation-permission` | Owning candidate |
 | List or generate scorecards | `GET/POST /applications/{id}/evaluations` | Owning recruiter |
 | Discuss one Python solution | `GET/POST /attempts/{attempt}/questions/{question}/follow-ups`, `PUT .../follow-ups/{turn}` | Owning candidate |
+| Request feedback on a saved explanation | `POST .../follow-ups/{turn}/review` | Owning candidate with explicit transcript-sharing consent |
+| Share or withdraw a confirmed explanation | `PUT .../follow-ups/{turn}/sharing` | Owning candidate on a completed assigned attempt |
+| Read shared coding explanations | `GET /applications/{id}/shared-explanations` | Recruiter in the owning organization |
 | Resolve a scorecard and citations | `GET /evaluations/{id}` | Owning recruiter |
 | Append a review event | `POST /evaluations/{id}/review` | Owning recruiter and matching revision |
 | Inspect operational summaries | `GET /operations` | Recruiter, tenant-scoped results and shared worker heartbeat |
@@ -106,10 +109,10 @@ See the [evaluation and readiness architecture](architecture/evaluation-and-read
 
 | Check | Local result |
 | --- | --- |
-| Backend and API | 30 tests passed on SQLite. The PostgreSQL-only import case was skipped. The original 28 tests passed using a disposable PostgreSQL instance, including the migration and overwrite-refusal test. |
+| Backend and API | 40 tests passed on SQLite, with one PostgreSQL-only case skipped. All 41 passed on a disposable PostgreSQL instance, including the snapshot import. |
 | Evaluation quality | Golden schema and arithmetic cases passed. All seven deliberately invalid model responses were rejected. A provider failure produced zero additional scorecards. The human-agreement metric is unavailable without independent labels. |
-| Frontend | Twelve component and audio-controller tests passed. Six Chromium browser tests passed on Monaco typing, indentation, undo/redo, paste, resizing, draft recovery, code discussions with editable dictation and local audio playback. Speech recognition events were simulated for repeatability. |
-| Integrated demo | The rehearsal used real private S3-compatible storage, the OS scanner, Celery, the parser, the assigned assessment and a human-reviewed scorecard. Original document deletion completed. |
+| Frontend | 13 component and audio-controller tests passed. 12 Chromium browser tests passed on Monaco typing, indentation, undo/redo, paste, resizing, draft recovery, code discussions with editable dictation and local audio playback. Speech recognition events were simulated for repeatability. |
+| Integrated demo | The rehearsal used real private S3-compatible storage, the OS scanner, Celery, the parser, the assigned assessment and a human-reviewed scorecard. Original document deletion completed. A separate company-assigned Python rehearsal graded five real cases, restored a confirmed dictated reply and its coaching notes after reload, and verified recruiter sharing and withdrawal. The dictation input was simulated. |
 | Build and dependency checks | Vite production build and ESLint passed. npm audit and pip-audit reported no known advisories in the checked frontend tree and backend dependency resolution. Monaco remains a large lazy-loaded bundle. |
 | Repository | Six repository-safeguard tests passed. Historical inspection found one reachable environment blob matching a provider credential signature. Credential rotation must be confirmed with the provider. |
 | Deployment | The seven-service Compose file validated against the Compose specification. Local verification used native processes. Check the GitHub Actions run for the pushed commit for the Linux container result. |

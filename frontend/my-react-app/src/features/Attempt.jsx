@@ -51,6 +51,9 @@ export default function Attempt({ item: a, refresh, leave }) {
   const q = a.questions[index],
     key = "/attempts/" + a.id,
     writable = a.status === "open" && a.expires > clock;
+  const remainingQuestions = a.questions.filter(
+    (item) => !values[item.id]?.trim(),
+  ).length;
   const seconds = Math.max(0, Math.ceil(a.expires - clock));
   const [savedQuestion, markSaved] = useState(null);
   const [advice, setAdvice] = useState(null);
@@ -173,6 +176,14 @@ export default function Attempt({ item: a, refresh, leave }) {
               remaining
             </span>
           </div>
+          {writable && remainingQuestions > 0 && a.questions.length > 1 && (
+            <small className="pace-note">
+              {remainingQuestions} unanswered · About{" "}
+              {Math.floor(seconds / remainingQuestions / 60)}m{" "}
+              {Math.floor((seconds / remainingQuestions) % 60)}s available per
+              unanswered question
+            </small>
+          )}
           <nav className="question-index" aria-label="Questions">
             {a.questions.map((x, i) => (
               <button
@@ -263,13 +274,15 @@ export default function Attempt({ item: a, refresh, leave }) {
           )}
         </>
       )}
-      {a.kind === "coding" && (writable || a.status === "complete") && (
+      {a.kind === "coding" && (
         <CodeDiscussion
           key={a.id + "/" + q.id}
           attempt={a.id}
           question={q.id}
           source={a.status === "complete" ? a.answers[q.id] : values[q.id]}
           completed={a.status === "complete"}
+          readOnly={!writable && a.status !== "complete"}
+          assigned={Boolean(a.invitation)}
           saved={savedQuestion?.id === q.id ? savedQuestion : 0}
         />
       )}

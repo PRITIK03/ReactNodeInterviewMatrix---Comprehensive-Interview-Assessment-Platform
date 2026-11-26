@@ -192,8 +192,7 @@ function Workspace({ user, signout }) {
       setStarting(false);
     }
   }
-  const showPrint =
-    !id && ["Assessments", "Jobs", "Applications"].includes(tab);
+  const showPrint = !id;
   const pageTitle =
     tab === "Assessments"
       ? id
@@ -269,12 +268,12 @@ function Workspace({ user, signout }) {
           })}
         </nav>
       </header>
-      <div className="canvas">
+      <div className="canvas" data-surface={id ? "attempt" : tab.toLowerCase()}>
         <main id="workspace" tabIndex={-1} data-area={tab.toLowerCase()}>
           <header
             className={"page-heading" + (showPrint ? " print-heading" : "")}
           >
-            {showPrint && <SignalPrint />}
+            {showPrint && <SignalPrint key={tab} area={tab} />}
             <h1>{pageTitle}</h1>
             {tab === "Assessments" && !id && versions.data?.length > 0 && (
               <p className="catalog-size">
