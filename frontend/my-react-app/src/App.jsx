@@ -36,7 +36,7 @@ import {
 } from "lucide-react";
 import "./workspace.css";
 
-function Login({ done }) {
+function Login({ done, demoEmail }) {
   const [register, toggle] = useState(false),
     [role, setRole] = useState("candidate");
   return (
@@ -50,7 +50,14 @@ function Login({ done }) {
         }}
       >
         <Field label="Email">
-          <input type="email" name="email" autoComplete="username" required />
+          <input
+            key={register ? "register" : demoEmail}
+            type="email"
+            name="email"
+            autoComplete="username"
+            defaultValue={register ? "" : demoEmail}
+            required
+          />
         </Field>
         <Field
           label={register ? "Password (12 or more characters)" : "Password"}
@@ -438,6 +445,9 @@ export default function App() {
   const [rev, bump] = useState(0),
     session = useResource("/me", rev);
   const route = useSyncExternalStore(subscribeLocation, currentLocation);
+  const demo = /^signin\?demo=((?:candidate|recruiter)\.[a-f0-9]{32})$/.exec(
+    route,
+  );
   if (
     ["home", "review-preview", "practice-preview"].includes(route) ||
     (!route && session.status === 401)
@@ -449,23 +459,38 @@ export default function App() {
         route={route}
       />
     );
-  if (session.data)
-    return (
-      <Workspace
-        user={session.data}
-        signout={async () => {
-          await api("/logout", "POST");
-          window.history.replaceState(
-            null,
-            "",
-            window.location.pathname + window.location.search,
-          );
-          for (const k of Object.keys(sessionStorage))
-            if (k.startsWith("matrix-draft/")) sessionStorage.removeItem(k);
-          bump((x) => x + 1);
-        }}
-      />
+  async function signOut(nextHash) {
+    await api("/logout", "POST");
+    window.history.replaceState(
+      null,
+      "",
+      window.location.pathname + window.location.search + nextHash,
     );
+    for (const k of Object.keys(sessionStorage))
+      if (k.startsWith("matrix-draft/")) sessionStorage.removeItem(k);
+    bump((x) => x + 1);
+  }
+  const demoEmail = demo ? demo[1] + "@demo.invalid" : "";
+  if (session.data && demoEmail && session.data.email !== demoEmail)
+    return (
+      <main className="entry">
+        <div className="entry-sheet">
+          <Panel title="Switch test account">
+            <p>
+              This browser is already signed in to a different account. Save any
+              ongoing work before switching.
+            </p>
+            <Form
+              label="Switch to test sign-in"
+              submit={() => signOut("#" + route)}
+            />
+            <a href="#assessments">Keep current workspace</a>
+          </Panel>
+        </div>
+      </main>
+    );
+  if (session.data)
+    return <Workspace user={session.data} signout={() => signOut("")} />;
   return (
     <main className="entry">
       <a
@@ -477,7 +502,7 @@ export default function App() {
       </a>
       <div className="entry-sheet">
         {session.status === 401 ? (
-          <Login done={() => bump((x) => x + 1)} />
+          <Login demoEmail={demoEmail} done={() => bump((x) => x + 1)} />
         ) : (
           <Feedback resource={session} loading="Opening workspace…" />
         )}

@@ -41,6 +41,17 @@ From the repository root, use PowerShell, Python 3.10+ and Node.js 24 LTS (24.15
 
 Open the workspace and register with an email and password. For the two-sided walkthrough, use fictional recruiter and candidate accounts in separate browser sessions. Leave the launcher running and press Ctrl+C to stop it. [Local workspace](http://127.0.0.1:5173) · [Local API reference](http://127.0.0.1:8000/docs)
 
+### Saved test login
+
+With the local app running, use either command from the repository root. The launcher opens sign-in with the email filled and copies the password. Paste it and select **Sign in**. Omit `-Browser Brave` to use your default browser.
+
+```powershell
+.\scripts\demo-login.ps1 -Browser Brave
+.\scripts\demo-login.ps1 -Role Recruiter -Browser Brave
+```
+
+Each role gets a synthetic account with a random password saved under `runtime/demo-login/`, encrypted for the current Windows user. Browsers pointed at the same local instance share these accounts and keep separate sessions. Use fictional data in these workspaces.
+
 <details>
 <summary><strong>Engineering notes and verification commands</strong></summary>
 
