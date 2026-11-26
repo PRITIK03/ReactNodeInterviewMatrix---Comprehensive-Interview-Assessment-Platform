@@ -19,6 +19,7 @@ import {
 import Recruiter from "./features/Recruiter";
 import Readiness from "./features/Readiness";
 import Applications from "./features/Applications";
+import Landing from "./features/Landing";
 import Profile from "./features/Profile";
 import Attempt from "./features/Attempt";
 import { SignalPrint, ActivityStrip } from "./features/WorkspaceSignals";
@@ -54,7 +55,13 @@ function Login({ done }) {
         <Field
           label={register ? "Password (12 or more characters)" : "Password"}
         >
-          <input type="password" name="password" minLength="12" required />
+          <input
+            type="password"
+            name="password"
+            autoComplete={register ? "new-password" : "current-password"}
+            minLength="12"
+            required
+          />
         </Field>
         {register && (
           <>
@@ -211,7 +218,13 @@ function Workspace({ user, signout }) {
       </a>
       <header className="masthead">
         <div className="mast-inner">
-          <Brand />
+          <a
+            className="brand-return"
+            href="#home"
+            aria-label="InterviewMatrix home"
+          >
+            <Brand />
+          </a>
           <span className="workspace-name">
             {admin
               ? overview.data?.name || "Recruiter workspace"
@@ -425,6 +438,18 @@ function Workspace({ user, signout }) {
 export default function App() {
   const [rev, bump] = useState(0),
     session = useResource("/me", rev);
+  const route = useSyncExternalStore(subscribeLocation, currentLocation);
+  if (
+    ["home", "review-preview", "practice-preview"].includes(route) ||
+    (!route && session.status === 401)
+  )
+    return (
+      <Landing
+        brand={<Brand />}
+        signedIn={Boolean(session.data)}
+        route={route}
+      />
+    );
   if (session.data)
     return (
       <Workspace
@@ -444,7 +469,13 @@ export default function App() {
     );
   return (
     <main className="entry">
-      <Brand />
+      <a
+        className="brand-return"
+        href="#home"
+        aria-label="InterviewMatrix home"
+      >
+        <Brand />
+      </a>
       <div className="entry-sheet">
         {session.status === 401 ? (
           <Login done={() => bump((x) => x + 1)} />

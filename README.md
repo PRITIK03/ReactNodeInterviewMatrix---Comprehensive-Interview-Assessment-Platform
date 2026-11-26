@@ -1,10 +1,30 @@
 # InterviewMatrix
 
-A local recruiter and candidate workspace for versioned assessments and evidence-based resume review. The recruiter can trace a score to the assessment that was assigned and a resume fact to the text that supports it. Candidates can practice separately from job applications.
+InterviewMatrix lets candidates practise timed interviews and gives recruiters a way to check the work behind a score. A Python result links to test verdicts, a resume finding links to a source passage, and a hiring decision records the human reviewer’s reasoning.
 
-Recruiters can now generate an evidence-backed scorecard for a specific job version, accept or override each finding, and record a human disposition. Candidates can use Monaco with offline draft recovery and a private microphone preflight. The [release guide](docs/release.md) contains the presentation sequence, API map, container configuration, migration procedure and security gates. The [evaluation architecture](docs/architecture/evaluation-and-readiness.md) explains how citations and scores are verified.
+![InterviewMatrix landing page with an example application, four criteria and inspectable evidence](docs/images/application-review.webp)
 
-The practice library has timed aptitude and Python editions at three levels. Advanced Python sessions feature a single scheduling, graph or sequence problem. Candidates can revisit their latest result from a 14-day activity chart. Recruiters can filter their organization’s applications by current stage. [Practice formats and reporting](docs/release.md#practice-formats-and-workspace-reporting)
+## Walk through the product
+
+Open the **Review** page and select **Inspect** beside a criterion. The public ledger uses a fictional application so anyone can explore how evidence and gaps are presented. In the authenticated workspace, access follows the application and organization. [Open the local overview](http://127.0.0.1:5173/#home)
+
+### Explore a Python problem
+
+Select **Practice** and trace the public example for *Merge availability windows*. Stepping through four time windows shows why overlapping minutes count once and the total is 40. The preview is interactive without starting a timed attempt.
+
+![Public practice preview showing the four time windows and their combined coverage](docs/images/python-trace.webp)
+
+### Complete an assessment
+
+In a candidate account, choose a company collection, track and level. The problem, example input and expected output sit beside Monaco on desktop and above it on mobile. Python indentation and recoverable drafts help during the timed attempt. The isolated runner executes submitted code. A candidate can then discuss a line of their solution using typed or supported spoken input.
+
+![A timed Python attempt with the public example beside a saved solution in Monaco](docs/images/python-workspace.webp)
+
+### Review an application
+
+In a recruiter account, filter applications by current stage. Open one to inspect an assessment result and resume evidence against the published job criteria. Accept or override an individual finding and record the reason for the final disposition. The screenshots use synthetic records. [Review walkthrough and release guide](docs/release.md) · [Evaluation architecture](docs/architecture/evaluation-and-readiness.md)
+
+![Organization-scoped recruiter pipeline with stage counts and six synthetic applications](docs/images/recruiter-pipeline.webp)
 
 ## Run locally on Windows x64
 

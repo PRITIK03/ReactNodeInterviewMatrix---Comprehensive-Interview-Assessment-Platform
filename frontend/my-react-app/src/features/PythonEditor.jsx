@@ -13,6 +13,23 @@ monaco.languages.setLanguageConfiguration("python", {
   ...conf,
   onEnterRules: pythonRules(monaco.languages.IndentAction),
 });
+monaco.editor.defineTheme("matrix-petrol", {
+  base: "vs-dark",
+  inherit: true,
+  rules: [
+    { token: "keyword", foreground: "F0C37F" },
+    { token: "number", foreground: "A6DAD2" },
+    { token: "string", foreground: "E5CBA2" },
+    { token: "comment", foreground: "A1BFBA" },
+  ],
+  colors: {
+    "editor.background": "#133842",
+    "editor.foreground": "#ECF2EB",
+    "editorLineNumber.foreground": "#9FBAB9",
+    "editor.lineHighlightBackground": "#1C434D",
+    "editorCursor.foreground": "#F2CA83",
+  },
+});
 export default function PythonEditor({ initial, onChange, onSave }) {
   const host = useRef(null),
     editor = useRef(null),
@@ -21,12 +38,13 @@ export default function PythonEditor({ initial, onChange, onSave }) {
   callbacks.current = { onChange, onSave };
   const [size, font] = useState(15),
     [tab, setTab] = useState(4),
-    [theme, setTheme] = useState("vs");
+    [theme, setTheme] = useState("matrix-petrol");
   useEffect(() => {
     const e = monaco.editor.create(host.current, {
       value: first.current,
       language: "python",
       automaticLayout: true,
+      padding: { top: 14, bottom: 12 },
       lineNumbers: "on",
       accessibilitySupport: "auto",
       ariaLabel: "Python submission",
@@ -74,7 +92,8 @@ export default function PythonEditor({ initial, onChange, onSave }) {
   }, [size, tab, theme]);
   return (
     <>
-      <div className="row">
+      <div className="editor-toolbar">
+        <strong>Python</strong>
         <label>
           Font size
           <select value={size} onChange={(e) => font(Number(e.target.value))}>
@@ -94,6 +113,7 @@ export default function PythonEditor({ initial, onChange, onSave }) {
         <label>
           Editor theme
           <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+            <option value="matrix-petrol">Petrol</option>
             <option value="vs">Light</option>
             <option value="vs-dark">Dark</option>
             <option value="hc-black">High contrast</option>

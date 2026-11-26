@@ -186,41 +186,53 @@ export default function Attempt({ item: a, refresh, leave }) {
               </button>
             ))}
           </nav>
-          <h3>{q.prompt}</h3>
-          <p>{q.description}</p>
           {q.options ? (
-            q.options.map((opt) => (
-              <label key={opt} className="option answer-option">
-                <input
-                  type="radio"
-                  disabled={!writable}
-                  checked={values[q.id] === opt}
-                  onChange={() => change(opt)}
-                />
-                {opt}
-              </label>
-            ))
-          ) : (
             <>
-              <pre>
-                Example input{"\n"}
-                {q.example.input}
-                {"\n"}Expected output{"\n"}
-                {q.example.output}
-              </pre>
-              {writable ? (
-                <Suspense fallback={<p>Loading Python editor…</p>}>
-                  <Editor
-                    key={q.id}
-                    initial={values[q.id] || ""}
-                    onChange={change}
-                    onSave={save}
+              <h3>{q.prompt}</h3>
+              <p>{q.description}</p>
+              {q.options.map((opt) => (
+                <label key={opt} className="option answer-option">
+                  <input
+                    type="radio"
+                    disabled={!writable}
+                    checked={values[q.id] === opt}
+                    onChange={() => change(opt)}
                   />
-                </Suspense>
-              ) : (
-                <pre>{values[q.id]}</pre>
-              )}
+                  {opt}
+                </label>
+              ))}
             </>
+          ) : (
+            <div className="coding-desk">
+              <div className="problem-sheet">
+                <h3>{q.prompt}</h3>
+                <p>{q.description}</p>
+                <div className="problem-example">
+                  <div>
+                    <h4>Example input</h4>
+                    <pre>{q.example.input.trimEnd()}</pre>
+                  </div>
+                  <div>
+                    <h4>Expected output</h4>
+                    <pre>{q.example.output.trimEnd()}</pre>
+                  </div>
+                </div>
+              </div>
+              <div className="solution-sheet">
+                {writable ? (
+                  <Suspense fallback={<p>Loading Python editor…</p>}>
+                    <Editor
+                      key={q.id}
+                      initial={values[q.id] || ""}
+                      onChange={change}
+                      onSave={save}
+                    />
+                  </Suspense>
+                ) : (
+                  <pre>{values[q.id]}</pre>
+                )}
+              </div>
+            </div>
           )}
           {writable && (
             <button className="quiet" onClick={save}>

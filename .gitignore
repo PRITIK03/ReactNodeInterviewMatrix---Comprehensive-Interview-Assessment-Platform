@@ -196,3 +196,6 @@ test-results/
 
 # Optional locally downloaded artwork. The frontend includes built-in fallbacks.
 /frontend/my-react-app/src/local-art/
+
+# Local design checks and disposable browser profiles
+/.taste-skill/
