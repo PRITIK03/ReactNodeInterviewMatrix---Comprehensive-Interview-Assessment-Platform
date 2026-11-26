@@ -1,0 +1,6 @@
+{
+  "files": ["frontend/my-react-app/index.html"],
+  "insertBefore": "</body>",
+  "commentSyntax": "html",
+  "cspChecked": true
+}
