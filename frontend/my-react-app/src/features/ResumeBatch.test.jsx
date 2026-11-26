@@ -14,11 +14,12 @@ it("keeps successful uploads when another file fails and retries only that file"
       root.render(
         <ResumeBatch
           application="application-one"
-          documents={[]}
+          documents={[{ id: "another-document", status: "uploading" }]}
           refresh={() => {}}
         />,
       ),
     );
+    expect(host.querySelector(".batch-counts").textContent).toContain("1 pending");
     const input = host.querySelector("input[type=file]");
     const files = ["one.pdf", "two.pdf", "script.txt"].map(
       (name) => new File(["fixture"], name),

@@ -102,7 +102,7 @@ export default function ResumeBatch({ application, documents, refresh }) {
     }
   }
   const processing = documents?.filter((d) =>
-    ["queued", "processing", "retrying"].includes(d.status),
+    ["uploading", "queued", "processing", "retrying"].includes(d.status),
   ).length;
   const failed = documents?.filter((d) =>
     ["failed", "upload_failed"].includes(d.status),
